@@ -7,7 +7,7 @@
 <title>رضعات سما</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <!--
   UI elements adapted from Uiverse.io (MIT License):
   star button – MuhammadHasann · segmented radios – 00Kubi · wallet card – byllzz
@@ -38,6 +38,8 @@
   --danger:#d9534a;
   --ok:#2f9e57;
   --ok-soft:#2f9e5726;
+  --warn:#9a5a12;
+  --warn-soft:#f6e3c7;
   --shadow:0 10px 30px rgba(74,47,42,.10);
   --radius:18px;
   --font-display:"Baloo Bhaijaan 2",system-ui,sans-serif;
@@ -66,6 +68,8 @@
   --danger:#ef6a5f;
   --ok:#5fd18a;
   --ok-soft:#5fd18a26;
+  --warn:#f4c27a;
+  --warn-soft:#3a2e22;
   --shadow:0 10px 30px rgba(0,0,0,.35);
 }
 
@@ -110,6 +114,19 @@ button,input{font-family:inherit;color:inherit}
   font-size:13px;
   padding:8px 12px;
   border-radius:12px;
+}
+.net-banner{
+  margin-top:10px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--warn-soft);
+  color:var(--warn);
+  font-size:14px;font-weight:600;
+  padding:4px;padding-inline-start:12px;
+  border-radius:12px;
+}
+.net-retry{
+  flex-shrink:0;min-height:44px;padding:0 16px;border-radius:10px;
+  border:none;background:var(--surface);color:var(--text);font-weight:700;cursor:pointer;
 }
 
 /* ================= THEME SWITCH (Galahhad) ================= */
@@ -350,7 +367,8 @@ button,input{font-family:inherit;color:inherit}
 
 /* ================= HISTORY ================= */
 .history{margin-top:30px}
-.history h2{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:6px}
+.history h2{font-family:var(--font-display);font-size:22px;font-weight:800}
+.history-hint{color:var(--muted);font-size:13px;margin-bottom:6px}
 .day{margin-top:18px}
 .day-head{
   display:flex;justify-content:space-between;align-items:baseline;
@@ -361,7 +379,11 @@ button,input{font-family:inherit;color:inherit}
 .entry{
   display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:10px;
   padding:12px 4px;border-bottom:1px solid var(--line);
+  cursor:pointer;border-radius:10px;transition:background-color .15s ease;
 }
+.entry:active{background-color:var(--seg-bg)}
+.entry:focus-visible{outline-offset:-2px}
+@media (hover:hover){.entry:hover{background-color:var(--seg-bg)}}
 .entry-time{font-weight:600;font-size:15px}
 .entry-amt{font-family:var(--font-display);font-size:22px;font-weight:800;line-height:1}
 .entry-amt small{font-size:13px;font-weight:700;margin-right:2px}
@@ -428,7 +450,14 @@ button,input{font-family:inherit;color:inherit}
 }
 .sheet.show{transform:none}
 .grabber{width:44px;height:5px;border-radius:5px;background:var(--line);margin:0 auto 10px}
-.sheet h3{font-family:var(--font-display);font-size:24px;font-weight:800;margin-bottom:4px}
+.sheet h3{font-family:var(--font-display);font-size:24px;font-weight:800}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.sheet-close{
+  flex-shrink:0;width:44px;height:44px;border-radius:50%;border:none;
+  background:var(--seg-bg);color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.sheet-close svg{width:18px;height:18px}
 .field{margin-top:16px}
 .field > label,.field-label{display:block;font-weight:600;font-size:15px;margin-bottom:8px}
 .field-row{display:flex;gap:8px;align-items:center}
@@ -491,6 +520,68 @@ button,input{font-family:inherit;color:inherit}
 .foot{margin-top:28px;text-align:center}
 .link-btn{border:none;background:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;padding:8px}
 
+/* ================= DESKTOP ================= */
+/* الشيت يصير نافذة بالنص بدل ما يطلع من جوة */
+@media (min-width:768px){
+  .sheet{
+    top:50%;bottom:auto;left:50%;right:auto;margin:0;
+    width:min(480px,calc(100% - 48px));
+    border-radius:24px;
+    padding:18px 22px 22px;
+    max-height:min(88vh,760px);
+    opacity:0;visibility:hidden;
+    transform:translate(-50%,-46%) scale(.98);
+    transition:transform .25s cubic-bezier(.2,.8,.2,1),opacity .2s ease,visibility 0s linear .25s;
+    box-shadow:0 30px 80px rgba(0,0,0,.35);
+  }
+  .sheet.show{
+    opacity:1;visibility:visible;
+    transform:translate(-50%,-50%);
+    transition:transform .25s cubic-bezier(.2,.8,.2,1),opacity .2s ease,visibility 0s;
+  }
+  .grabber{display:none}
+  .login{
+    min-height:auto;margin:12vh auto 0;max-width:420px;
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:24px;padding:32px 28px;box-shadow:var(--shadow);
+  }
+}
+/* عمودين على الحاسبة: الملخص والزر على اليمين، السجل على اليسار */
+@media (min-width:960px){
+  #appView{
+    max-width:1080px;
+    padding:28px 32px 64px;
+    display:grid;
+    grid-template-columns:400px minmax(0,1fr);
+    column-gap:40px;
+    align-items:start;
+  }
+  #appView > .top{grid-column:1 / -1;grid-row:1;padding-bottom:8px}
+  #appView > .mode-banner{grid-column:1 / -1;grid-row:2}
+  #appView > .net-banner{grid-column:1 / -1;grid-row:3}
+  #appView > .side{
+    grid-column:1;grid-row:4;margin-top:20px;
+    position:sticky;top:24px;
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:28px;padding:8px 24px 24px;
+    box-shadow:var(--shadow);
+  }
+  #appView > .history{
+    grid-column:2;grid-row:4;margin-top:20px;
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:28px;padding:22px 26px 10px;
+    box-shadow:var(--shadow);
+  }
+  #appView > .foot{grid-column:2;grid-row:5}
+  .title{font-size:32px}
+  .side .wallet-wrap{padding-top:88px}
+  .side .action{margin:22px 0 0}
+  .history h2{font-size:24px}
+  .day:first-child{margin-top:10px}
+  .entry{padding:12px 10px;grid-template-columns:84px 1fr auto}
+  .empty-state{margin-bottom:14px}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
 }
@@ -508,6 +599,15 @@ button,input{font-family:inherit;color:inherit}
     <button class="save-btn" type="submit" id="loginBtn">دخول</button>
     <div class="form-error" id="loginError"></div>
   </form>
+</main>
+
+<!-- ============ CONNECTION ERROR ============ -->
+<main class="app hidden" id="errorView">
+  <div class="login">
+    <div class="title">رضعات سما</div>
+    <p>ما كدرت أتصل بالسيرفر. تأكد من الإنترنت وحدّث الصفحة.</p>
+    <button class="save-btn" type="button" id="reloadPageBtn">حدّث الصفحة</button>
+  </div>
 </main>
 
 <!-- ============ APP ============ -->
@@ -538,7 +638,13 @@ button,input{font-family:inherit;color:inherit}
   </header>
 
   <div class="mode-banner hidden" id="modeBanner">وضع تجريبي: البيانات محفوظة على هذا الجهاز بس. اربط Supabase حتى تتزامن.</div>
+  <div class="net-banner hidden" id="netBanner" role="alert">
+    <span id="netText">ما كو إنترنت. السجل يمكن مو محدّث.</span>
+    <button class="net-retry" type="button" id="netRetry">جرّب</button>
+  </div>
 
+  <!-- Side column on desktop: summary + main action -->
+  <div class="side">
   <!-- Summary wallet -->
   <section class="wallet-wrap">
     <div class="wallet" id="wallet" role="button" tabindex="0" aria-expanded="false" aria-label="ملخص اليوم، اضغط لعرض آخر الرضعات">
@@ -573,10 +679,12 @@ button,input{font-family:inherit;color:inherit}
       <div class="star-6"><svg viewBox="0 0 784.11 815.53"><path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"/></svg></div>
     </button>
   </div>
+  </div>
 
   <!-- History -->
   <section class="history">
     <h2>السجل</h2>
+    <div class="history-hint">اضغط على أي رضعة حتى تعدّلها</div>
     <div id="historyList"></div>
   </section>
 
@@ -594,7 +702,12 @@ button,input{font-family:inherit;color:inherit}
 <div class="backdrop" id="backdrop"></div>
 <form class="sheet" id="sheet" aria-label="رضعة جديدة">
   <div class="grabber"></div>
-  <h3>رضعة جديدة</h3>
+  <div class="sheet-head">
+    <h3 id="sheetTitle">رضعة جديدة</h3>
+    <button class="sheet-close" type="button" id="sheetClose" aria-label="سد">
+      <svg viewBox="0 0 15 15" fill="none" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z"/></svg>
+    </button>
+  </div>
 
   <div class="field">
     <span class="field-label">الكمية</span>
@@ -690,7 +803,10 @@ function toLocalInput(d){
 }
 
 /* ---------------- data store ---------------- */
-const useSupabase = !!(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
+const supabaseConfigured = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+// إذا Supabase مضبوط بس المكتبة ما تحمّلت (نت ضعيف)، لا ننزل للوضع التجريبي حتى ما تنحفظ رضعات على جهاز واحد بس
+const supabaseMissing = supabaseConfigured && !window.supabase;
+const useSupabase = supabaseConfigured && !!window.supabase;
 const sb = useSupabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 let feeds = [];
 
@@ -702,6 +818,12 @@ const localStore = {
   async add(f){
     const row = { id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), ...f };
     const a = this.read(); a.push(row); this.write(a); return row;
+  },
+  async update(id, f){
+    let row = null;
+    this.write(this.read().map(r => r.id === id ? (row = { ...r, ...f }) : r));
+    if (!row) throw new Error('not found');
+    return row;
   },
   async remove(id){ this.write(this.read().filter(r => r.id !== id)); }
 };
@@ -722,6 +844,12 @@ const supaStore = {
     if (error) throw error;
     return data;
   },
+  async update(id, f){
+    const { data, error } = await sb.from('feeds').update(f).eq('id', id)
+      .select('id,fed_at,amount_ml,formula_no,given_by,note').single();
+    if (error) throw error;
+    return data;
+  },
   async remove(id){
     const { error } = await sb.from('feeds').delete().eq('id', id);
     if (error) throw error;
@@ -729,9 +857,19 @@ const supaStore = {
 };
 const store = useSupabase ? supaStore : localStore;
 
+function setNetStatus(problem){
+  // problem: null = كلشي تمام، 'offline' = ما كو نت، 'error' = فشل جلب السجل
+  if (!useSupabase) problem = null;
+  $('netBanner').classList.toggle('hidden', !problem);
+  if (problem) $('netText').textContent = problem === 'offline'
+    ? 'ما كو إنترنت. السجل يمكن مو محدّث.'
+    : 'ما كدرت أجيب السجل. تأكد من الإنترنت.';
+}
+
 async function reload(){
-  try{ feeds = await store.list(); }
-  catch(e){ console.error(e); }
+  if (useSupabase && !navigator.onLine){ setNetStatus('offline'); render(); return; }
+  try{ feeds = await store.list(); setNetStatus(null); }
+  catch(e){ console.error(e); setNetStatus('error'); }
   render();
 }
 
@@ -809,7 +947,7 @@ function renderHistory(){
         <span class="day-sum">${sum} مل، ${n} ${n === 1 ? 'رضعة' : 'رضعات'}</span></div>
       ${g.items.map(f => {
         const meta = [f.formula_no ? 'حليب رقم ' + esc(f.formula_no) : '', esc(f.given_by || '')].filter(Boolean).join('، ');
-        return `<div class="entry">
+        return `<div class="entry" data-id="${esc(f.id)}" role="button" tabindex="0" aria-label="عدّل رضعة ${f.amount_ml} مل، ${fmtTime(new Date(f.fed_at))}">
           <div class="entry-time">${fmtTime(new Date(f.fed_at))}</div>
           <div>
             <div class="entry-amt">${f.amount_ml}<small>مل</small></div>
@@ -842,7 +980,11 @@ function render(){ renderSummary(); renderHistory(); }
 /* ---------------- delete (tap twice) ---------------- */
 $('historyList').addEventListener('click', async e => {
   const btn = e.target.closest('.del-btn');
-  if (!btn) return;
+  if (!btn){
+    const entry = e.target.closest('.entry');
+    if (entry) openEdit(entry.dataset.id);
+    return;
+  }
   if (!btn.classList.contains('armed')){
     document.querySelectorAll('.del-btn.armed').forEach(b => b.classList.remove('armed'));
     btn.classList.add('armed');
@@ -858,6 +1000,12 @@ $('historyList').addEventListener('click', async e => {
   }catch(err){
     btn.classList.remove('armed');
     alert('ما انحذفت. تأكد من الإنترنت وجرب مرة ثانية.');
+  }
+});
+$('historyList').addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('entry')){
+    e.preventDefault();
+    openEdit(e.target.dataset.id);
   }
 });
 
@@ -889,15 +1037,37 @@ $('segAmount').addEventListener('change', () => {
 
 /* ---------------- sheet ---------------- */
 function loadPrefs(){ try{ return JSON.parse(safeGet('sama_prefs') || '{}'); }catch(e){ return {}; } }
-function openSheet(){
-  const p = loadPrefs();
-  setRadio('amount', p.amount && AMOUNTS.includes(Number(p.amount)) ? p.amount : AMOUNTS[2]);
-  setRadio('formula', p.formula || FORMULAS[0]);
-  setRadio('by', p.by || GIVERS[0]);
+let editingId = null;   // null = رضعة جديدة، غير هيج = id الرضعة اللي نعدلها
+function clearRadios(){ document.querySelectorAll('#sheet input[type="radio"]').forEach(r => { r.checked = false; }); }
+function openSheet(feed){
+  clearRadios();
   $('customAmountRow').classList.add('hidden');
   $('customAmount').value = '';
-  $('feedTime').value = toLocalInput(new Date());
-  $('feedNote').value = '';
+  if (feed){
+    editingId = feed.id;
+    if (AMOUNTS.includes(Number(feed.amount_ml))) setRadio('amount', feed.amount_ml);
+    else {
+      setRadio('amount', 'other');
+      $('customAmountRow').classList.remove('hidden');
+      $('customAmount').value = feed.amount_ml;
+    }
+    if (feed.formula_no) setRadio('formula', feed.formula_no);
+    if (feed.given_by) setRadio('by', feed.given_by);
+    $('feedTime').value = toLocalInput(new Date(feed.fed_at));
+    $('feedNote').value = feed.note || '';
+    $('sheetTitle').textContent = 'تعديل الرضعة';
+    $('saveBtn').textContent = 'احفظ التعديل';
+  } else {
+    editingId = null;
+    const p = loadPrefs();
+    setRadio('amount', p.amount && AMOUNTS.includes(Number(p.amount)) ? p.amount : AMOUNTS[2]);
+    setRadio('formula', p.formula || FORMULAS[0]);
+    setRadio('by', p.by || GIVERS[0]);
+    $('feedTime').value = toLocalInput(new Date());
+    $('feedNote').value = '';
+    $('sheetTitle').textContent = 'رضعة جديدة';
+    $('saveBtn').textContent = 'سجّل الرضعة';
+  }
   $('formError').textContent = '';
   $('backdrop').classList.add('show');
   $('sheet').classList.add('show');
@@ -906,7 +1076,12 @@ function closeSheet(){
   $('backdrop').classList.remove('show');
   $('sheet').classList.remove('show');
 }
+function openEdit(id){
+  const f = feeds.find(x => String(x.id) === String(id));
+  if (f) openSheet(f);
+}
 $('backdrop').addEventListener('click', closeSheet);
+$('sheetClose').addEventListener('click', closeSheet);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 $('nowBtn').addEventListener('click', () => { $('feedTime').value = toLocalInput(new Date()); });
 
@@ -914,7 +1089,7 @@ $('newFeedBtn').addEventListener('click', () => {
   const b = $('newFeedBtn');
   b.classList.add('burst');
   setTimeout(() => b.classList.remove('burst'), 650);
-  setTimeout(openSheet, 220);
+  setTimeout(() => openSheet(), 220);
 });
 
 $('sheet').addEventListener('submit', async e => {
@@ -935,17 +1110,29 @@ $('sheet').addEventListener('submit', async e => {
     note: $('feedNote').value.trim() || null
   };
   $('saveBtn').disabled = true;
+  const editId = editingId;
   try{
-    const row = await store.add(feed);
-    safeSet('sama_prefs', JSON.stringify({ amount:String(amount), formula:feed.formula_no, by:feed.given_by }));
-    feeds.push(row);
-    feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
-    render();
-    closeSheet();
-    showToast(row);
+    if (editId){
+      const row = await store.update(editId, feed);
+      feeds = feeds.map(f => String(f.id) === String(editId) ? row : f);
+      feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
+      render();
+      closeSheet();
+      showToast(row, true);
+    } else {
+      const row = await store.add(feed);
+      safeSet('sama_prefs', JSON.stringify({ amount:String(amount), formula:feed.formula_no, by:feed.given_by }));
+      feeds.push(row);
+      feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
+      render();
+      closeSheet();
+      showToast(row);
+    }
   }catch(err){
     console.error(err);
-    $('formError').textContent = 'ما انسجلت. تأكد من الإنترنت وجرب مرة ثانية.';
+    $('formError').textContent = editId
+      ? 'ما انحفظ التعديل. تأكد من الإنترنت وجرب مرة ثانية.'
+      : 'ما انسجلت. تأكد من الإنترنت وجرب مرة ثانية.';
   }finally{
     $('saveBtn').disabled = false;
   }
@@ -953,8 +1140,11 @@ $('sheet').addEventListener('submit', async e => {
 
 /* ---------------- toast with undo ---------------- */
 let toastTimer = null, lastAddedId = null;
-function showToast(row){
-  lastAddedId = row.id;
+function showToast(row, edited){
+  // التراجع بس للرضعة الجديدة؛ التعديل ما بيه تراجع
+  lastAddedId = edited ? null : row.id;
+  $('toastTitle').textContent = edited ? 'انعدلت الرضعة' : 'انسجلت الرضعة';
+  $('toastUndo').classList.toggle('hidden', !!edited);
   $('toastSub').textContent = row.amount_ml + ' مل، حليب رقم ' + (row.formula_no || '-') + '، ' + fmtTime(new Date(row.fed_at));
   $('toast').classList.add('show');
   clearTimeout(toastTimer);
@@ -982,6 +1172,9 @@ $('toTop').addEventListener('click', () => window.scrollTo({ top:0 }));
 /* ---------------- tick: refresh "آخر رضعة قبل" ---------------- */
 setInterval(renderSummary, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) reload(); });
+window.addEventListener('offline', () => setNetStatus('offline'));
+window.addEventListener('online', () => reload());
+$('netRetry').addEventListener('click', () => reload());
 
 /* ---------------- boot ---------------- */
 function showApp(){
@@ -1018,7 +1211,13 @@ $('logoutBtn').addEventListener('click', async () => {
   feeds = []; showLogin();
 });
 
+$('reloadPageBtn').addEventListener('click', () => location.reload());
+
 (async function boot(){
+  if (supabaseMissing){
+    $('errorView').classList.remove('hidden');
+    return;
+  }
   if (!useSupabase){
     $('modeBanner').classList.remove('hidden');
     showApp(); reload();
@@ -1028,6 +1227,13 @@ $('logoutBtn').addEventListener('click', async () => {
   const { data } = await sb.auth.getSession();
   if (data.session){ showApp(); subscribe(); reload(); }
   else showLogin();
+  // إذا انتهت الجلسة، رجّع لشاشة الدخول بدل سجل قديم
+  sb.auth.onAuthStateChange(event => {
+    if (event === 'SIGNED_OUT'){
+      if (channel){ sb.removeChannel(channel); channel = null; }
+      feeds = []; closeSheet(); showLogin();
+    }
+  });
 })();
 </script>
 </body>
