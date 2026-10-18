@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "رضعات سما",
+  "short_name": "رضعات سما",
+  "description": "سجل رضعات سما ومتابعة مجموع اليوم",
+  "lang": "ar-IQ",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#221e2b",
+  "theme_color": "#fbf7f6",
+  "icons": [
+    { "src": "./assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
