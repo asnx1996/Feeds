@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf7f6">
+<title>رضعات سما</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!--
+  UI elements adapted from Uiverse.io (MIT License):
+  star button – MuhammadHasann · segmented radios – 00Kubi · wallet card – byllzz
+  theme switch – Galahhad · back-to-top / delete button – vinodjangid07 · toast – akshat-patel28
+-->
+<style>
+/* ================= TOKENS ================= */
+:root{
+  --bg:#fbf7f6;
+  --surface:#ffffff;
+  --text:#3a2a26;
+  --muted:#8c7a74;
+  --line:#efe4df;
+  --peach:#fec195;
+  --peach-deep:#e8955f;
+  --on-peach:#2b1a14;
+  --star:#e8955f;
+  --seg-bg:#f3ebe7;
+  --seg-on:#ffffff;
+  --pocket:#4a2f2a;
+  --pocket-stitch:#6e4a41;
+  --pocket-text:#fde3cf;
+  --pocket-sub:#c9a99c;
+  --card1:#fec195;
+  --card2:#f6cfd0;
+  --card3:#fff4e8;
+  --card-text:#3a2a26;
+  --danger:#d9534a;
+  --ok:#2f9e57;
+  --ok-soft:#2f9e5726;
+  --shadow:0 10px 30px rgba(74,47,42,.10);
+  --radius:18px;
+  --font-display:"Baloo Bhaijaan 2",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans Arabic",system-ui,sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#17141f;
+  --surface:#221e2b;
+  --text:#f1e8e3;
+  --muted:#a59aa3;
+  --line:#332d3d;
+  --peach:#fec195;
+  --peach-deep:#f3aa78;
+  --on-peach:#2b1a14;
+  --star:#fffdef;
+  --seg-bg:#2a2533;
+  --seg-on:#3a3346;
+  --pocket:#2e1e1b;
+  --pocket-stitch:#5a3d36;
+  --pocket-text:#fec195;
+  --pocket-sub:#a88a7e;
+  --card1:#e9a87a;
+  --card2:#d9a9ab;
+  --card3:#efe2d4;
+  --card-text:#2a1d1a;
+  --danger:#ef6a5f;
+  --ok:#5fd18a;
+  --ok-soft:#5fd18a26;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.5;
+  min-height:100vh;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .3s ease,color .3s ease;
+}
+button,input{font-family:inherit;color:inherit}
+.hidden{display:none !important}
+:focus-visible{outline:2px solid var(--peach-deep);outline-offset:3px;border-radius:8px}
+
+.app{
+  max-width:460px;
+  margin:0 auto;
+  padding:16px 16px calc(96px + env(safe-area-inset-bottom));
+}
+
+/* ================= HEADER ================= */
+.top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 2px 4px;
+}
+.title{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:28px;
+  line-height:1.1;
+}
+.today-date{color:var(--muted);font-size:14px}
+.mode-banner{
+  margin-top:10px;
+  background:var(--seg-bg);
+  color:var(--muted);
+  font-size:13px;
+  padding:8px 12px;
+  border-radius:12px;
+}
+
+/* ================= THEME SWITCH (Galahhad) ================= */
+.theme-switch{
+  direction:ltr;
+  --toggle-size:18px;
+  --container-width:5.625em;
+  --container-height:2.5em;
+  --container-radius:6.25em;
+  --container-light-bg:#3D7EAE;
+  --container-night-bg:#1D1F2C;
+  --circle-container-diameter:3.375em;
+  --sun-moon-diameter:2.125em;
+  --sun-bg:#ECCA2F;
+  --moon-bg:#C4C9D1;
+  --spot-color:#959DB1;
+  --circle-container-offset:calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);
+  --stars-color:#fff;
+  --clouds-color:#F3FDFF;
+  --back-clouds-color:#AACADF;
+  --transition:.5s cubic-bezier(0,-0.02,0.4,1.25);
+  --circle-transition:.3s cubic-bezier(0,-0.02,0.35,1.17);
+  flex-shrink:0;
+}
+.theme-switch,.theme-switch *,.theme-switch *::before,.theme-switch *::after{
+  box-sizing:border-box;margin:0;padding:0;font-size:var(--toggle-size);
+}
+.theme-switch__container{
+  width:var(--container-width);height:var(--container-height);
+  background-color:var(--container-light-bg);
+  border-radius:var(--container-radius);
+  overflow:hidden;cursor:pointer;position:relative;
+  box-shadow:0em -0.062em 0.062em rgba(0,0,0,.25),0em 0.062em 0.125em rgba(255,255,255,.94);
+  transition:var(--transition);
+}
+.theme-switch__container::before{
+  content:"";position:absolute;z-index:1;inset:0;
+  box-shadow:0em 0.05em 0.187em rgba(0,0,0,.25) inset,0em 0.05em 0.187em rgba(0,0,0,.25) inset;
+  border-radius:var(--container-radius);
+}
+.theme-switch__checkbox{position:absolute;opacity:0;width:0;height:0}
+.theme-switch__checkbox:focus-visible + .theme-switch__container{outline:2px solid var(--peach-deep);outline-offset:3px}
+.theme-switch__circle-container{
+  width:var(--circle-container-diameter);height:var(--circle-container-diameter);
+  background-color:rgba(255,255,255,.1);
+  position:absolute;left:var(--circle-container-offset);top:var(--circle-container-offset);
+  border-radius:var(--container-radius);
+  box-shadow:inset 0 0 0 3.375em rgba(255,255,255,.1),inset 0 0 0 3.375em rgba(255,255,255,.1),0 0 0 0.625em rgba(255,255,255,.1),0 0 0 1.25em rgba(255,255,255,.1);
+  display:flex;transition:var(--circle-transition);pointer-events:none;
+}
+.theme-switch__sun-moon-container{
+  pointer-events:auto;position:relative;z-index:2;
+  width:var(--sun-moon-diameter);height:var(--sun-moon-diameter);
+  margin:auto;border-radius:var(--container-radius);
+  background-color:var(--sun-bg);
+  box-shadow:0.062em 0.062em 0.062em 0em rgba(254,255,239,.61) inset,0em -0.062em 0.062em 0em #a1872a inset;
+  filter:drop-shadow(0.062em 0.125em 0.125em rgba(0,0,0,.25)) drop-shadow(0em 0.062em 0.125em rgba(0,0,0,.25));
+  overflow:hidden;transition:var(--transition);
+}
+.theme-switch__moon{
+  transform:translateX(100%);width:100%;height:100%;
+  background-color:var(--moon-bg);border-radius:inherit;
+  box-shadow:0.062em 0.062em 0.062em 0em rgba(254,255,239,.61) inset,0em -0.062em 0.062em 0em #969696 inset;
+  transition:var(--transition);position:relative;
+}
+.theme-switch__spot{
+  position:absolute;top:0.75em;left:0.312em;width:0.75em;height:0.75em;
+  border-radius:var(--container-radius);background-color:var(--spot-color);
+  box-shadow:0em 0.0312em 0.062em rgba(0,0,0,.25) inset;
+}
+.theme-switch__spot:nth-of-type(2){width:0.375em;height:0.375em;top:0.937em;left:1.375em}
+.theme-switch__spot:nth-last-of-type(3){width:0.25em;height:0.25em;top:0.312em;left:0.812em}
+.theme-switch__clouds{
+  width:1.25em;height:1.25em;background-color:var(--clouds-color);
+  border-radius:var(--container-radius);position:absolute;bottom:-0.625em;left:0.312em;
+  box-shadow:0.937em 0.312em var(--clouds-color),-0.312em -0.312em var(--back-clouds-color),1.437em 0.375em var(--clouds-color),0.5em -0.125em var(--back-clouds-color),2.187em 0 var(--clouds-color),1.25em -0.062em var(--back-clouds-color),2.937em 0.312em var(--clouds-color),2em -0.312em var(--back-clouds-color),3.625em -0.062em var(--clouds-color),2.625em 0em var(--back-clouds-color),4.5em -0.312em var(--clouds-color),3.375em -0.437em var(--back-clouds-color),4.625em -1.75em 0 0.437em var(--clouds-color),4em -0.625em var(--back-clouds-color),4.125em -2.125em 0 0.437em var(--back-clouds-color);
+  transition:.5s cubic-bezier(0,-0.02,0.4,1.25);
+}
+.theme-switch__stars-container{
+  position:absolute;color:var(--stars-color);top:-100%;left:0.312em;width:2.75em;height:auto;
+  transition:var(--transition);
+}
+.theme-switch__checkbox:checked + .theme-switch__container{background-color:var(--container-night-bg)}
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container{
+  left:calc(100% - var(--circle-container-offset) - var(--circle-container-diameter));
+}
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__moon{transform:translate(0)}
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds{bottom:-4.062em}
+.theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container{top:50%;transform:translateY(-50%)}
+@media (hover:hover){
+  .theme-switch__circle-container:hover{left:calc(var(--circle-container-offset) + 0.187em)}
+  .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container:hover{
+    left:calc(100% - var(--circle-container-offset) - var(--circle-container-diameter) - 0.187em);
+  }
+}
+
+/* ================= WALLET SUMMARY (byllzz) ================= */
+.wallet-wrap{
+  padding-top:96px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.wallet{
+  position:relative;width:300px;height:240px;cursor:pointer;
+  display:flex;justify-content:center;align-items:flex-end;
+  transition:transform .4s ease;user-select:none;
+}
+.wallet-back{
+  position:absolute;bottom:0;width:300px;height:205px;
+  background:var(--pocket);
+  border-radius:22px 22px 60px 60px;z-index:5;
+  box-shadow:inset 0 25px 35px rgba(0,0,0,.35),inset 0 5px 15px rgba(0,0,0,.4);
+}
+@keyframes slideIntoPocket{
+  0%{transform:translateY(-100px);opacity:0}
+  100%{transform:translateY(0);opacity:1}
+}
+.feed-card{
+  position:absolute;width:280px;height:140px;right:10px;
+  border-radius:16px;padding:14px 18px;
+  color:var(--card-text);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.4),0 -4px 15px rgba(0,0,0,.12);
+  transition:transform .6s cubic-bezier(.34,1.56,.64,1);
+  animation:slideIntoPocket .8s cubic-bezier(.2,.8,.2,1) backwards;
+}
+.feed-card .inner{display:flex;flex-direction:column;justify-content:space-between;height:100%}
+.feed-card .row-top{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
+.feed-card .time{
+  font-size:13px;font-weight:600;background:rgba(0,0,0,.07);
+  padding:2px 10px;border-radius:20px;
+}
+.feed-card .row-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.feed-card .lbl{font-size:11px;opacity:.65;display:block}
+.feed-card .amt{font-family:var(--font-display);font-size:30px;font-weight:800;line-height:1}
+.feed-card .amt small{font-size:15px;font-weight:700;margin-right:3px}
+.feed-card .meta{text-align:left;font-size:13px;font-weight:600;line-height:1.5}
+.feed-card.empty .amt{opacity:.35}
+.c1{background:var(--card1);bottom:95px;z-index:10;animation-delay:.1s}
+.c2{background:var(--card2);bottom:70px;z-index:20;animation-delay:.2s}
+.c3{background:var(--card3);bottom:45px;z-index:30;animation-delay:.3s}
+.pocket{
+  position:absolute;bottom:0;width:300px;height:165px;z-index:40;
+  filter:drop-shadow(0 15px 25px rgba(40,20,15,.35));
+}
+.pocket svg{width:100%;height:100%;display:block}
+.pocket-content{
+  position:absolute;top:38px;width:100%;text-align:center;z-index:50;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.total{
+  font-family:var(--font-display);
+  color:var(--pocket-text);font-size:40px;font-weight:800;line-height:1.05;
+}
+.total small{font-size:18px;font-weight:700}
+.sub{color:var(--pocket-sub);font-size:14px;font-weight:500}
+.last{
+  margin-top:8px;color:var(--pocket-text);font-size:13px;font-weight:500;
+  background:rgba(255,255,255,.08);padding:3px 12px;border-radius:20px;
+}
+.wallet-hint{margin-top:14px;color:var(--muted);font-size:13px}
+.wallet.open{transform:translateY(-4px)}
+.wallet.open .c1{transform:translateY(-82px) rotate(-3deg)}
+.wallet.open .c2{transform:translateY(-50px) rotate(2deg)}
+.wallet.open .c3{transform:translateY(-12px)}
+@media (hover:hover){.wallet:not(.open):hover{transform:translateY(-4px)}}
+@media (max-width:340px){.wallet-wrap{transform:scale(.9);transform-origin:top center}}
+
+/* ================= STAR BUTTON (MuhammadHasann) ================= */
+.action{margin:26px 0 8px;isolation:isolate}
+.star-btn{
+  position:relative;width:100%;
+  padding:18px 20px;
+  background:var(--peach);
+  font-family:var(--font-display);
+  font-size:22px;font-weight:800;
+  color:var(--on-peach);
+  border:3px solid var(--peach);
+  border-radius:18px;
+  box-shadow:0 0 0 #fec1958c;
+  transition:all .3s ease-in-out;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.star-btn .plus{font-size:28px;line-height:1}
+.star-btn [class^="star-"]{position:absolute;height:auto;z-index:-5;filter:drop-shadow(0 0 0 #fffdef)}
+.star-btn [class^="star-"] svg{display:block;width:100%;height:auto}
+.star-btn .fil0{fill:var(--star)}
+.star-btn .star-1{top:20%;left:20%;width:25px;transition:all 1s cubic-bezier(.05,.83,.43,.96)}
+.star-btn .star-2{top:45%;left:45%;width:15px;transition:all 1s cubic-bezier(0,.4,0,1.01)}
+.star-btn .star-3{top:40%;left:40%;width:5px;transition:all 1s cubic-bezier(0,.4,0,1.01)}
+.star-btn .star-4{top:20%;left:40%;width:8px;transition:all .8s cubic-bezier(0,.4,0,1.01)}
+.star-btn .star-5{top:25%;left:45%;width:15px;transition:all .6s cubic-bezier(0,.4,0,1.01)}
+.star-btn .star-6{top:5%;left:50%;width:5px;transition:all .8s ease}
+.star-btn.burst{background:transparent;color:var(--peach-deep);box-shadow:0 0 25px #fec1958c}
+.star-btn.burst [class^="star-"]{filter:drop-shadow(0 0 10px #fffdef);z-index:2}
+.star-btn.burst .star-1{top:-80%;left:-5%}
+.star-btn.burst .star-2{top:-25%;left:10%}
+.star-btn.burst .star-3{top:55%;left:25%}
+.star-btn.burst .star-4{top:30%;left:80%}
+.star-btn.burst .star-5{top:25%;left:102%}
+.star-btn.burst .star-6{top:5%;left:60%}
+
+/* ================= SEGMENTED (00Kubi) ================= */
+.seg{
+  position:relative;display:flex;flex-wrap:wrap;
+  border-radius:14px;background-color:var(--seg-bg);
+  box-shadow:0 0 0 1px rgba(0,0,0,.04);
+  padding:4px;width:100%;font-size:16px;gap:2px;
+}
+.seg .radio{flex:1 1 auto;text-align:center;min-width:56px}
+.seg .radio input{position:absolute;opacity:0;width:0;height:0}
+.seg .radio .name{
+  display:flex;cursor:pointer;align-items:center;justify-content:center;
+  border-radius:11px;padding:10px 4px;min-height:46px;
+  color:var(--text);font-weight:500;
+  transition:all .15s ease-in-out;position:relative;
+}
+.seg .radio input:focus-visible + .name{outline:2px solid var(--peach-deep);outline-offset:-2px}
+.seg .radio input:checked + .name{
+  background-color:var(--seg-on);font-weight:700;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+  animation:select .3s ease;
+}
+@media (hover:hover){.seg .radio:hover .name{background-color:rgba(255,255,255,.45)}}
+@keyframes select{0%{transform:scale(.95)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.seg .radio input:checked + .name::before,
+.seg .radio input:checked + .name::after{
+  content:"";position:absolute;width:5px;height:5px;border-radius:50%;
+  background:var(--peach-deep);opacity:0;
+  animation:particles .5s ease forwards;left:50%;
+}
+.seg .radio input:checked + .name::before{top:-8px;--direction:-10px}
+.seg .radio input:checked + .name::after{bottom:-8px;--direction:10px}
+@keyframes particles{
+  0%{opacity:0;transform:translateX(-50%) translateY(0)}
+  50%{opacity:1}
+  100%{opacity:0;transform:translateX(-50%) translateY(var(--direction))}
+}
+
+/* ================= HISTORY ================= */
+.history{margin-top:30px}
+.history h2{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:6px}
+.day{margin-top:18px}
+.day-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:0 4px 8px;border-bottom:1px solid var(--line);
+}
+.day-name{font-weight:600}
+.day-sum{color:var(--muted);font-size:14px}
+.entry{
+  display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:10px;
+  padding:12px 4px;border-bottom:1px solid var(--line);
+}
+.entry-time{font-weight:600;font-size:15px}
+.entry-amt{font-family:var(--font-display);font-size:22px;font-weight:800;line-height:1}
+.entry-amt small{font-size:13px;font-weight:700;margin-right:2px}
+.entry-meta{color:var(--muted);font-size:13px;margin-top:2px}
+.entry-note{color:var(--muted);font-size:13px;font-style:italic}
+.empty-state{
+  text-align:center;color:var(--muted);padding:28px 10px;
+  border:1.5px dashed var(--line);border-radius:var(--radius);margin-top:14px;
+}
+
+/* ================= DELETE BUTTON (vinodjangid07 style) ================= */
+.del-btn{
+  width:40px;height:40px;border-radius:50%;
+  background-color:var(--seg-bg);border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;overflow:hidden;position:relative;
+  transition-duration:.3s;
+}
+.del-btn svg{width:14px;transition-duration:.3s}
+.del-btn svg path{fill:var(--muted)}
+.del-btn::before{
+  position:absolute;bottom:-20px;content:"احذف؟";
+  color:#fff;font-size:0;font-weight:700;
+}
+.del-btn.armed{width:84px;border-radius:50px;background-color:var(--danger)}
+.del-btn.armed svg{transform:translateY(-200%)}
+.del-btn.armed::before{font-size:14px;bottom:unset;transition-duration:.3s}
+
+/* ================= BACK TO TOP (vinodjangid07) ================= */
+.to-top{
+  position:fixed;left:16px;bottom:calc(20px + env(safe-area-inset-bottom));
+  width:50px;height:50px;border-radius:50%;
+  background-color:var(--pocket);border:none;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 4px #fec19540;
+  cursor:pointer;transition-duration:.3s;overflow:hidden;z-index:60;
+  opacity:0;pointer-events:none;transform:translateY(10px);
+}
+.to-top.show{opacity:1;pointer-events:auto;transform:none}
+.to-top svg{width:12px;transition-duration:.3s}
+.to-top svg path{fill:var(--pocket-text)}
+.to-top::before{position:absolute;bottom:-20px;content:"لفوق";color:var(--on-peach);font-size:0;font-weight:700}
+@media (hover:hover){
+  .to-top:hover{width:110px;border-radius:50px;background-color:var(--peach)}
+  .to-top:hover svg{transform:translateY(-200%)}
+  .to-top:hover::before{font-size:14px;bottom:unset;transition-duration:.3s}
+}
+
+/* ================= SHEET ================= */
+.backdrop{
+  position:fixed;inset:0;background:rgba(20,12,10,.45);
+  z-index:80;opacity:0;pointer-events:none;transition:opacity .25s ease;
+}
+.backdrop.show{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:90;
+  max-width:460px;margin:0 auto;
+  background:var(--surface);
+  border-radius:24px 24px 0 0;
+  padding:10px 18px calc(18px + env(safe-area-inset-bottom));
+  max-height:92vh;overflow-y:auto;
+  transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 -10px 40px rgba(0,0,0,.2);
+}
+.sheet.show{transform:none}
+.grabber{width:44px;height:5px;border-radius:5px;background:var(--line);margin:0 auto 10px}
+.sheet h3{font-family:var(--font-display);font-size:24px;font-weight:800;margin-bottom:4px}
+.field{margin-top:16px}
+.field > label,.field-label{display:block;font-weight:600;font-size:15px;margin-bottom:8px}
+.field-row{display:flex;gap:8px;align-items:center}
+.text-input{
+  width:100%;min-height:48px;padding:10px 14px;
+  border-radius:12px;border:1.5px solid var(--line);
+  background:var(--bg);font-size:16px;
+}
+.text-input:focus{outline:none;border-color:var(--peach-deep)}
+.ghost-btn{
+  flex-shrink:0;min-height:48px;padding:0 16px;border-radius:12px;
+  border:1.5px solid var(--line);background:transparent;font-weight:600;cursor:pointer;
+}
+.save-btn{
+  margin-top:22px;width:100%;min-height:56px;border:none;border-radius:16px;
+  background:var(--peach);color:var(--on-peach);
+  font-family:var(--font-display);font-size:20px;font-weight:800;cursor:pointer;
+  transition:transform .15s ease;
+}
+.save-btn:active{transform:scale(.98)}
+.save-btn:disabled{opacity:.6}
+.form-error{color:var(--danger);font-size:14px;margin-top:10px;min-height:1em}
+
+/* ================= TOAST (akshat-patel28) ================= */
+.toast{
+  position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;
+  width:min(360px,calc(100% - 32px));
+  min-height:76px;border-radius:12px;padding:10px 14px;
+  background-color:var(--surface);box-shadow:var(--shadow);
+  overflow:hidden;display:flex;align-items:center;gap:12px;
+  z-index:100;transform:translate(-50%,-140%);transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.toast.show{transform:translate(-50%,0)}
+.toast .wave{position:absolute;transform:rotate(-90deg);right:-31px;top:30px;width:80px;fill:var(--ok-soft)}
+.toast .icon-wrap{
+  width:36px;height:36px;flex-shrink:0;display:flex;justify-content:center;align-items:center;
+  background-color:var(--ok-soft);border-radius:50%;margin-right:6px;
+}
+.toast .icon{width:18px;height:18px;color:var(--ok)}
+.toast .msg{flex-grow:1;display:flex;flex-direction:column;justify-content:center}
+.toast .msg-title{color:var(--ok);font-size:17px;font-weight:700}
+.toast .msg-sub{font-size:14px;color:var(--muted)}
+.toast .undo{
+  border:none;background:transparent;color:var(--peach-deep);
+  font-weight:700;font-size:15px;cursor:pointer;padding:8px 6px;min-height:44px;
+}
+.toast .close{
+  border:none;background:transparent;cursor:pointer;width:36px;height:44px;
+  display:flex;align-items:center;justify-content:center;color:var(--muted);
+}
+.toast .close svg{width:18px;height:18px}
+
+/* ================= LOGIN ================= */
+.login{
+  min-height:80vh;display:flex;flex-direction:column;justify-content:center;gap:12px;
+}
+.login .title{font-size:34px;margin-bottom:4px}
+.login p{color:var(--muted);margin-bottom:8px}
+
+.foot{margin-top:28px;text-align:center}
+.link-btn{border:none;background:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;padding:8px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<main class="app hidden" id="loginView">
+  <form class="login" id="loginForm">
+    <div class="title">رضعات سما</div>
+    <p>سجّل دخول بحساب العائلة حتى تشوفون نفس السجل.</p>
+    <input class="text-input" type="email" id="loginEmail" placeholder="الإيميل" autocomplete="email" required dir="ltr">
+    <input class="text-input" type="password" id="loginPass" placeholder="الرمز" autocomplete="current-password" required dir="ltr">
+    <button class="save-btn" type="submit" id="loginBtn">دخول</button>
+    <div class="form-error" id="loginError"></div>
+  </form>
+</main>
+
+<!-- ============ APP ============ -->
+<main class="app hidden" id="appView">
+  <header class="top">
+    <div>
+      <div class="title">رضعات سما</div>
+      <div class="today-date" id="todayDate"></div>
+    </div>
+    <label class="theme-switch" aria-label="الوضع الليلي">
+      <input type="checkbox" class="theme-switch__checkbox" id="themeToggle">
+      <div class="theme-switch__container">
+        <div class="theme-switch__clouds"></div>
+        <div class="theme-switch__stars-container">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z" fill="currentColor"></path></svg>
+        </div>
+        <div class="theme-switch__circle-container">
+          <div class="theme-switch__sun-moon-container">
+            <div class="theme-switch__moon">
+              <div class="theme-switch__spot"></div>
+              <div class="theme-switch__spot"></div>
+              <div class="theme-switch__spot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </label>
+  </header>
+
+  <div class="mode-banner hidden" id="modeBanner">وضع تجريبي: البيانات محفوظة على هذا الجهاز بس. اربط Supabase حتى تتزامن.</div>
+
+  <!-- Summary wallet -->
+  <section class="wallet-wrap">
+    <div class="wallet" id="wallet" role="button" tabindex="0" aria-expanded="false" aria-label="ملخص اليوم، اضغط لعرض آخر الرضعات">
+      <div class="wallet-back"></div>
+      <div class="feed-card c1" id="card1"></div>
+      <div class="feed-card c2" id="card2"></div>
+      <div class="feed-card c3" id="card3"></div>
+      <div class="pocket">
+        <svg viewBox="0 0 280 160" fill="none" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M 0 20 C 0 10, 5 10, 10 10 C 20 10, 25 25, 40 25 L 240 25 C 255 25, 260 10, 270 10 C 275 10, 280 10, 280 20 L 280 120 C 280 155, 260 160, 240 160 L 40 160 C 20 160, 0 155, 0 120 Z" fill="var(--pocket)"></path>
+          <path d="M 8 22 C 8 16, 12 16, 15 16 C 23 16, 27 29, 40 29 L 240 29 C 253 29, 257 16, 265 16 C 268 16, 272 16, 272 22 L 272 120 C 272 150, 255 152, 240 152 L 40 152 C 25 152, 8 152, 8 120 Z" stroke="var(--pocket-stitch)" stroke-width="1.5" stroke-dasharray="6 4"></path>
+        </svg>
+        <div class="pocket-content">
+          <div class="total" id="sumTotal">0 <small>مل</small></div>
+          <div class="sub" id="sumSub">مجموع اليوم</div>
+          <div class="last" id="sumLast">ما كو رضعات بعد</div>
+        </div>
+      </div>
+    </div>
+    <div class="wallet-hint" id="walletHint">اضغط لعرض آخر الرضعات</div>
+  </section>
+
+  <!-- Main action -->
+  <div class="action">
+    <button class="star-btn" id="newFeedBtn" type="button">
+      <span class="plus">+</span> رضعة جديدة
+      <div class="star-1"><svg viewBox="0 0 784.11 815.53"><path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"/></svg></div>
+      <div class="star-2"><svg viewBox="0 0 784.11 815.53"><path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"/></svg></div>
+      <div class="star-3"><svg viewBox="0 0 784.11 815.53"><path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"/></svg></div>
+      <div class="star-4"><svg viewBox="0 0 784.11 815.53"><path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"/></svg></div>
+      <div class="star-5"><svg viewBox="0 0 784.11 815.53"><path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"/></svg></div>
+      <div class="star-6"><svg viewBox="0 0 784.11 815.53"><path class="fil0" d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"/></svg></div>
+    </button>
+  </div>
+
+  <!-- History -->
+  <section class="history">
+    <h2>السجل</h2>
+    <div id="historyList"></div>
+  </section>
+
+  <div class="foot">
+    <button class="link-btn hidden" id="logoutBtn" type="button">تسجيل خروج</button>
+  </div>
+</main>
+
+<!-- Back to top -->
+<button class="to-top" id="toTop" type="button" aria-label="ارجع لفوق">
+  <svg viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+</button>
+
+<!-- New feed sheet -->
+<div class="backdrop" id="backdrop"></div>
+<form class="sheet" id="sheet" aria-label="رضعة جديدة">
+  <div class="grabber"></div>
+  <h3>رضعة جديدة</h3>
+
+  <div class="field">
+    <span class="field-label">الكمية</span>
+    <div class="seg" id="segAmount"></div>
+    <div class="field-row hidden" id="customAmountRow" style="margin-top:10px">
+      <input class="text-input" type="number" inputmode="numeric" min="1" max="1000" id="customAmount" placeholder="اكتب الكمية بالمل">
+    </div>
+  </div>
+
+  <div class="field">
+    <span class="field-label">رقم الحليب</span>
+    <div class="seg" id="segFormula"></div>
+  </div>
+
+  <div class="field">
+    <span class="field-label">منو أعطاها</span>
+    <div class="seg" id="segBy"></div>
+  </div>
+
+  <div class="field">
+    <label for="feedTime">الوقت</label>
+    <div class="field-row">
+      <input class="text-input" type="datetime-local" id="feedTime">
+      <button class="ghost-btn" type="button" id="nowBtn">هسه</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="feedNote">ملاحظة (اختياري)</label>
+    <input class="text-input" type="text" id="feedNote" maxlength="200" placeholder="مثلاً: ما كمّلت، تقيّأت شوية">
+  </div>
+
+  <button class="save-btn" type="submit" id="saveBtn">سجّل الرضعة</button>
+  <div class="form-error" id="formError"></div>
+</form>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg class="wave" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path d="M0,256L11.4,240C22.9,224,46,192,69,192C91.4,192,114,224,137,234.7C160,245,183,235,206,213.3C228.6,192,251,160,274,149.3C297.1,139,320,149,343,181.3C365.7,213,389,267,411,282.7C434.3,299,457,277,480,250.7C502.9,224,526,192,549,181.3C571.4,171,594,181,617,208C640,235,663,277,686,256C708.6,235,731,149,754,122.7C777.1,96,800,128,823,165.3C845.7,203,869,245,891,224C914.3,203,937,117,960,112C982.9,107,1006,181,1029,197.3C1051.4,213,1074,171,1097,144C1120,117,1143,107,1166,133.3C1188.6,160,1211,224,1234,218.7C1257.1,213,1280,139,1303,133.3C1325.7,128,1349,192,1371,192C1394.3,192,1417,128,1429,96L1440,64L1440,320L0,320Z"/></svg>
+  <div class="icon-wrap">
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>
+  </div>
+  <div class="msg">
+    <span class="msg-title" id="toastTitle">انسجلت الرضعة</span>
+    <span class="msg-sub" id="toastSub"></span>
+  </div>
+  <button class="undo" id="toastUndo" type="button">تراجع</button>
+  <button class="close" id="toastClose" type="button" aria-label="سد">
+    <svg viewBox="0 0 15 15" fill="none"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z"/></svg>
+  </button>
+</div>
+
+<script>
+/* =========================================================
+   الإعدادات: حط رابط ومفتاح مشروع Supabase هنا.
+   إذا تركتها فارغة، التطبيق يشتغل بوضع تجريبي على الجهاز.
+   ========================================================= */
+const SUPABASE_URL = 'https://vakelwjiktrbpsophlps.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_vOU3O6bbUzoLE9Plf-7nqw_eT40tVEX';
+
+const AMOUNTS  = [30, 60, 90, 120, 150];
+const FORMULAS = ['1', '2', '3'];
+const GIVERS   = ['ماما', 'بابا', 'غيرهم'];
+
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const LOCALE = 'ar-IQ-u-nu-latn';
+function safeGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function safeSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtTime(d){ return d.toLocaleTimeString(LOCALE,{hour:'numeric',minute:'2-digit'}); }
+function dayKey(d){ return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+function startOfToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+function dayLabel(d){
+  const t = startOfToday();
+  const y = new Date(t); y.setDate(t.getDate()-1);
+  if (d >= t) return 'اليوم';
+  if (d >= y) return 'البارحة';
+  return d.toLocaleDateString(LOCALE,{weekday:'long',day:'numeric',month:'long'});
+}
+function agoText(ms){
+  const mins = Math.floor(ms/60000);
+  if (mins < 1) return 'هسه';
+  const h = Math.floor(mins/60), m = mins%60;
+  const parts = [];
+  if (h) parts.push(h + ' ساعة');
+  if (m) parts.push(m + ' دقيقة');
+  return 'قبل ' + parts.join(' و');
+}
+function toLocalInput(d){
+  const p = n => String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
+}
+
+/* ---------------- data store ---------------- */
+const useSupabase = !!(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
+const sb = useSupabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+let feeds = [];
+
+const localStore = {
+  key:'sama_feeds_v1',
+  read(){ try{ return JSON.parse(safeGet(this.key) || '[]'); }catch(e){ return []; } },
+  write(a){ safeSet(this.key, JSON.stringify(a)); },
+  async list(){ return this.read().sort((a,b)=> new Date(b.fed_at) - new Date(a.fed_at)); },
+  async add(f){
+    const row = { id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), ...f };
+    const a = this.read(); a.push(row); this.write(a); return row;
+  },
+  async remove(id){ this.write(this.read().filter(r => r.id !== id)); }
+};
+
+const supaStore = {
+  async list(){
+    const since = new Date(); since.setDate(since.getDate()-30);
+    const { data, error } = await sb.from('feeds')
+      .select('id,fed_at,amount_ml,formula_no,given_by,note')
+      .gte('fed_at', since.toISOString())
+      .order('fed_at', { ascending:false })
+      .limit(500);
+    if (error) throw error;
+    return data;
+  },
+  async add(f){
+    const { data, error } = await sb.from('feeds').insert(f).select().single();
+    if (error) throw error;
+    return data;
+  },
+  async remove(id){
+    const { error } = await sb.from('feeds').delete().eq('id', id);
+    if (error) throw error;
+  }
+};
+const store = useSupabase ? supaStore : localStore;
+
+async function reload(){
+  try{ feeds = await store.list(); }
+  catch(e){ console.error(e); }
+  render();
+}
+
+/* ---------------- theme ---------------- */
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  $('themeToggle').checked = (t === 'dark');
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', t === 'dark' ? '#17141f' : '#fbf7f6');
+}
+(function initTheme(){
+  const saved = safeGet('sama_theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  $('themeToggle').addEventListener('change', e => {
+    const t = e.target.checked ? 'dark' : 'light';
+    applyTheme(t); safeSet('sama_theme', t);
+  });
+})();
+
+/* ---------------- render ---------------- */
+function cardHTML(f, label){
+  if (!f){
+    return `<div class="inner"><div class="row-top"><span>${label}</span><span class="time">--</span></div>
+      <div class="row-bottom"><div><span class="lbl">الكمية</span><span class="amt">--</span></div><div class="meta"></div></div></div>`;
+  }
+  const d = new Date(f.fed_at);
+  const dayNote = d < startOfToday() ? ' (' + dayLabel(d) + ')' : '';
+  return `<div class="inner">
+    <div class="row-top"><span>${label}${dayNote}</span><span class="time">${fmtTime(d)}</span></div>
+    <div class="row-bottom">
+      <div><span class="lbl">الكمية</span><span class="amt">${f.amount_ml}<small>مل</small></span></div>
+      <div class="meta">${f.formula_no ? 'حليب رقم ' + esc(f.formula_no) : ''}${f.given_by ? '<br>' + esc(f.given_by) : ''}</div>
+    </div></div>`;
+}
+
+function renderSummary(){
+  const today = startOfToday();
+  const todays = feeds.filter(f => new Date(f.fed_at) >= today);
+  const total = todays.reduce((s,f) => s + (Number(f.amount_ml)||0), 0);
+  $('sumTotal').innerHTML = total + ' <small>مل</small>';
+  $('sumSub').textContent = todays.length
+    ? 'مجموع اليوم، ' + todays.length + (todays.length === 1 ? ' رضعة' : ' رضعات')
+    : 'مجموع اليوم';
+  $('sumLast').textContent = feeds[0]
+    ? 'آخر رضعة ' + agoText(Date.now() - new Date(feeds[0].fed_at))
+    : 'ما كو رضعات بعد';
+
+  const labels = ['آخر رضعة','اللي قبلها','قبلها'];
+  [['card3',0],['card2',1],['card1',2]].forEach(([id,i]) => {
+    const el = $(id);
+    el.innerHTML = cardHTML(feeds[i], labels[i]);
+    el.classList.toggle('empty', !feeds[i]);
+  });
+  $('todayDate').textContent = new Date().toLocaleDateString(LOCALE,{weekday:'long',day:'numeric',month:'long'});
+}
+
+function renderHistory(){
+  const box = $('historyList');
+  if (!feeds.length){
+    box.innerHTML = '<div class="empty-state">ما كو رضعات مسجلة. اضغط "رضعة جديدة" وسجّل أول وحدة.</div>';
+    return;
+  }
+  const groups = [];
+  const map = {};
+  feeds.forEach(f => {
+    const d = new Date(f.fed_at), k = dayKey(d);
+    if (!map[k]){ map[k] = { date:d, items:[] }; groups.push(map[k]); }
+    map[k].items.push(f);
+  });
+  box.innerHTML = groups.map(g => {
+    const sum = g.items.reduce((s,f) => s + (Number(f.amount_ml)||0), 0);
+    const n = g.items.length;
+    return `<div class="day">
+      <div class="day-head"><span class="day-name">${dayLabel(g.date)}</span>
+        <span class="day-sum">${sum} مل، ${n} ${n === 1 ? 'رضعة' : 'رضعات'}</span></div>
+      ${g.items.map(f => {
+        const meta = [f.formula_no ? 'حليب رقم ' + esc(f.formula_no) : '', esc(f.given_by || '')].filter(Boolean).join('، ');
+        return `<div class="entry">
+          <div class="entry-time">${fmtTime(new Date(f.fed_at))}</div>
+          <div>
+            <div class="entry-amt">${f.amount_ml}<small>مل</small></div>
+            ${meta ? `<div class="entry-meta">${meta}</div>` : ''}
+            ${f.note ? `<div class="entry-note">${esc(f.note)}</div>` : ''}
+          </div>
+          <button class="del-btn" type="button" data-id="${esc(f.id)}" aria-label="احذف هاي الرضعة">
+            <svg viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+          </button>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+}
+
+function render(){ renderSummary(); renderHistory(); }
+
+/* ---------------- wallet toggle ---------------- */
+(function(){
+  const w = $('wallet');
+  function toggle(){
+    const open = w.classList.toggle('open');
+    w.setAttribute('aria-expanded', open);
+    $('walletHint').textContent = open ? 'اضغط للإغلاق' : 'اضغط لعرض آخر الرضعات';
+  }
+  w.addEventListener('click', toggle);
+  w.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); } });
+})();
+
+/* ---------------- delete (tap twice) ---------------- */
+$('historyList').addEventListener('click', async e => {
+  const btn = e.target.closest('.del-btn');
+  if (!btn) return;
+  if (!btn.classList.contains('armed')){
+    document.querySelectorAll('.del-btn.armed').forEach(b => b.classList.remove('armed'));
+    btn.classList.add('armed');
+    clearTimeout(btn._t);
+    btn._t = setTimeout(() => btn.classList.remove('armed'), 3000);
+    return;
+  }
+  const id = btn.dataset.id;
+  try{
+    await store.remove(id);
+    feeds = feeds.filter(f => String(f.id) !== String(id));
+    render();
+  }catch(err){
+    btn.classList.remove('armed');
+    alert('ما انحذفت. تأكد من الإنترنت وجرب مرة ثانية.');
+  }
+});
+
+/* ---------------- segmented controls ---------------- */
+function buildSeg(boxId, name, options, labelFn){
+  $(boxId).innerHTML = options.map(o => `
+    <label class="radio">
+      <input type="radio" name="${name}" value="${esc(o)}">
+      <span class="name">${labelFn ? labelFn(o) : esc(o)}</span>
+    </label>`).join('');
+}
+buildSeg('segAmount', 'amount', [...AMOUNTS.map(String), 'other'], o => o === 'other' ? 'غير' : o);
+buildSeg('segFormula', 'formula', FORMULAS);
+buildSeg('segBy', 'by', GIVERS);
+
+function setRadio(name, value){
+  const el = document.querySelector(`input[name="${name}"][value="${CSS.escape(String(value))}"]`);
+  if (el) el.checked = true;
+}
+function getRadio(name){
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : null;
+}
+$('segAmount').addEventListener('change', () => {
+  const other = getRadio('amount') === 'other';
+  $('customAmountRow').classList.toggle('hidden', !other);
+  if (other) $('customAmount').focus();
+});
+
+/* ---------------- sheet ---------------- */
+function loadPrefs(){ try{ return JSON.parse(safeGet('sama_prefs') || '{}'); }catch(e){ return {}; } }
+function openSheet(){
+  const p = loadPrefs();
+  setRadio('amount', p.amount && AMOUNTS.includes(Number(p.amount)) ? p.amount : AMOUNTS[2]);
+  setRadio('formula', p.formula || FORMULAS[0]);
+  setRadio('by', p.by || GIVERS[0]);
+  $('customAmountRow').classList.add('hidden');
+  $('customAmount').value = '';
+  $('feedTime').value = toLocalInput(new Date());
+  $('feedNote').value = '';
+  $('formError').textContent = '';
+  $('backdrop').classList.add('show');
+  $('sheet').classList.add('show');
+}
+function closeSheet(){
+  $('backdrop').classList.remove('show');
+  $('sheet').classList.remove('show');
+}
+$('backdrop').addEventListener('click', closeSheet);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+$('nowBtn').addEventListener('click', () => { $('feedTime').value = toLocalInput(new Date()); });
+
+$('newFeedBtn').addEventListener('click', () => {
+  const b = $('newFeedBtn');
+  b.classList.add('burst');
+  setTimeout(() => b.classList.remove('burst'), 650);
+  setTimeout(openSheet, 220);
+});
+
+$('sheet').addEventListener('submit', async e => {
+  e.preventDefault();
+  let amount = getRadio('amount');
+  if (amount === 'other') amount = $('customAmount').value;
+  amount = parseInt(amount, 10);
+  if (!amount || amount < 1 || amount > 1000){
+    $('formError').textContent = 'اكتب كمية صحيحة بالمل.';
+    return;
+  }
+  const t = $('feedTime').value ? new Date($('feedTime').value) : new Date();
+  const feed = {
+    fed_at: t.toISOString(),
+    amount_ml: amount,
+    formula_no: getRadio('formula'),
+    given_by: getRadio('by'),
+    note: $('feedNote').value.trim() || null
+  };
+  $('saveBtn').disabled = true;
+  try{
+    const row = await store.add(feed);
+    safeSet('sama_prefs', JSON.stringify({ amount:String(amount), formula:feed.formula_no, by:feed.given_by }));
+    feeds.push(row);
+    feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
+    render();
+    closeSheet();
+    showToast(row);
+  }catch(err){
+    console.error(err);
+    $('formError').textContent = 'ما انسجلت. تأكد من الإنترنت وجرب مرة ثانية.';
+  }finally{
+    $('saveBtn').disabled = false;
+  }
+});
+
+/* ---------------- toast with undo ---------------- */
+let toastTimer = null, lastAddedId = null;
+function showToast(row){
+  lastAddedId = row.id;
+  $('toastSub').textContent = row.amount_ml + ' مل، حليب رقم ' + (row.formula_no || '-') + '، ' + fmtTime(new Date(row.fed_at));
+  $('toast').classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, 5000);
+}
+function hideToast(){ $('toast').classList.remove('show'); lastAddedId = null; }
+$('toastClose').addEventListener('click', hideToast);
+$('toastUndo').addEventListener('click', async () => {
+  if (!lastAddedId) return;
+  const id = lastAddedId;
+  hideToast();
+  try{
+    await store.remove(id);
+    feeds = feeds.filter(f => String(f.id) !== String(id));
+    render();
+  }catch(e){ alert('ما انلغت. احذفها من السجل.'); }
+});
+
+/* ---------------- back to top ---------------- */
+window.addEventListener('scroll', () => {
+  $('toTop').classList.toggle('show', window.scrollY > 500);
+}, { passive:true });
+$('toTop').addEventListener('click', () => window.scrollTo({ top:0 }));
+
+/* ---------------- tick: refresh "آخر رضعة قبل" ---------------- */
+setInterval(renderSummary, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) reload(); });
+
+/* ---------------- boot ---------------- */
+function showApp(){
+  $('loginView').classList.add('hidden');
+  $('appView').classList.remove('hidden');
+}
+function showLogin(){
+  $('appView').classList.add('hidden');
+  $('loginView').classList.remove('hidden');
+}
+let channel = null;
+function subscribe(){
+  if (channel) return;
+  channel = sb.channel('feeds-changes')
+    .on('postgres_changes', { event:'*', schema:'public', table:'feeds' }, () => reload())
+    .subscribe();
+}
+
+$('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('loginError').textContent = '';
+  $('loginBtn').disabled = true;
+  const { error } = await sb.auth.signInWithPassword({
+    email: $('loginEmail').value.trim(),
+    password: $('loginPass').value
+  });
+  $('loginBtn').disabled = false;
+  if (error){ $('loginError').textContent = 'الإيميل أو الرمز غلط.'; return; }
+  showApp(); subscribe(); reload();
+});
+$('logoutBtn').addEventListener('click', async () => {
+  await sb.auth.signOut();
+  if (channel){ sb.removeChannel(channel); channel = null; }
+  feeds = []; showLogin();
+});
+
+(async function boot(){
+  if (!useSupabase){
+    $('modeBanner').classList.remove('hidden');
+    showApp(); reload();
+    return;
+  }
+  $('logoutBtn').classList.remove('hidden');
+  const { data } = await sb.auth.getSession();
+  if (data.session){ showApp(); subscribe(); reload(); }
+  else showLogin();
+})();
+</script>
+</body>
+</html>
