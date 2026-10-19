@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <!--
   UI elements adapted from Uiverse.io (MIT License):
-  star button – MuhammadHasann · segmented radios – 00Kubi · wallet card – byllzz
+  star button – MuhammadHasann · segmented radios – 00Kubi · wallet card – byllzz (reshaped as a bag)
   theme switch – Galahhad · back-to-top / delete button – vinodjangid07 · toast – akshat-patel28
 -->
 <style>
@@ -229,20 +229,34 @@ button,input{font-family:inherit;color:inherit}
   }
 }
 
-/* ================= WALLET SUMMARY (byllzz) ================= */
-.wallet-wrap{
+/* ================= BAG SUMMARY (cards from byllzz wallet, reshaped as a baby bag) ================= */
+.bag-wrap{
   padding-top:96px;
   display:flex;flex-direction:column;align-items:center;
 }
-.wallet{
-  position:relative;width:300px;height:240px;cursor:pointer;
+.bag{
+  position:relative;width:300px;height:262px;cursor:pointer;
   display:flex;justify-content:center;align-items:flex-end;
   transition:transform .4s ease;user-select:none;
 }
-.wallet-back{
-  position:absolute;bottom:0;width:300px;height:205px;
+/* اليد مال الجنطة، ورا البطاقات */
+.bag-handle{
+  position:absolute;bottom:196px;left:50%;z-index:3;
+  width:150px;height:84px;margin-left:-75px;
+  border:13px solid var(--pocket);border-bottom:none;
+  border-radius:80px 80px 0 0;
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.08);
+}
+.bag-handle::before,.bag-handle::after{
+  content:"";position:absolute;bottom:-14px;width:26px;height:20px;
+  background:var(--pocket-stitch);border-radius:6px;
+}
+.bag-handle::before{left:-19px}
+.bag-handle::after{right:-19px}
+.bag-back{
+  position:absolute;bottom:0;width:300px;height:212px;
   background:var(--pocket);
-  border-radius:22px 22px 60px 60px;z-index:5;
+  border-radius:30px 30px 44px 44px;z-index:5;
   box-shadow:inset 0 25px 35px rgba(0,0,0,.35),inset 0 5px 15px rgba(0,0,0,.4);
 }
 @keyframes slideIntoPocket{
@@ -269,16 +283,16 @@ button,input{font-family:inherit;color:inherit}
 .feed-card .amt small{font-size:15px;font-weight:700;margin-right:3px}
 .feed-card .meta{text-align:left;font-size:13px;font-weight:600;line-height:1.5}
 .feed-card.empty .amt{opacity:.35}
-.c1{background:var(--card1);bottom:95px;z-index:10;animation-delay:.1s}
-.c2{background:var(--card2);bottom:70px;z-index:20;animation-delay:.2s}
-.c3{background:var(--card3);bottom:45px;z-index:30;animation-delay:.3s}
-.pocket{
-  position:absolute;bottom:0;width:300px;height:165px;z-index:40;
+.c1{background:var(--card1);bottom:108px;z-index:10;animation-delay:.1s}
+.c2{background:var(--card2);bottom:84px;z-index:20;animation-delay:.2s}
+.c3{background:var(--card3);bottom:60px;z-index:30;animation-delay:.3s}
+.bag-front{
+  position:absolute;bottom:0;width:300px;height:180px;z-index:40;
   filter:drop-shadow(0 15px 25px rgba(40,20,15,.35));
 }
-.pocket svg{width:100%;height:100%;display:block}
-.pocket-content{
-  position:absolute;top:38px;width:100%;text-align:center;z-index:50;
+.bag-front svg{width:100%;height:100%;display:block}
+.bag-content{
+  position:absolute;top:72px;width:100%;text-align:center;z-index:50;
   display:flex;flex-direction:column;align-items:center;gap:2px;
 }
 .total{
@@ -291,13 +305,91 @@ button,input{font-family:inherit;color:inherit}
   margin-top:8px;color:var(--pocket-text);font-size:13px;font-weight:500;
   background:rgba(255,255,255,.08);padding:3px 12px;border-radius:20px;
 }
-.wallet-hint{margin-top:14px;color:var(--muted);font-size:13px}
-.wallet.open{transform:translateY(-4px)}
-.wallet.open .c1{transform:translateY(-82px) rotate(-3deg)}
-.wallet.open .c2{transform:translateY(-50px) rotate(2deg)}
-.wallet.open .c3{transform:translateY(-12px)}
-@media (hover:hover){.wallet:not(.open):hover{transform:translateY(-4px)}}
-@media (max-width:340px){.wallet-wrap{transform:scale(.9);transform-origin:top center}}
+.bag-hint{margin-top:14px;color:var(--muted);font-size:13px}
+/* لما تنفتح الجنطة البطاقات تطلع كلها لفوق وتنقرا كاملة */
+.bag-wrap{transition:padding-top .6s cubic-bezier(.34,1.2,.64,1)}
+.bag-wrap.open{padding-top:318px}
+.bag.open .c1{transform:translateY(-324px) rotate(-2deg)}
+.bag.open .c2{transform:translateY(-215px) rotate(1.5deg)}
+.bag.open .c3{transform:translateY(-106px)}
+@media (hover:hover){.bag:not(.open):hover{transform:translateY(-4px)}}
+@media (max-width:340px){.bag-wrap{transform:scale(.9);transform-origin:top center}}
+
+/* ================= CHILD SWITCHER + TABS ================= */
+.kids{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 2px;scrollbar-width:none}
+.kids::-webkit-scrollbar{display:none}
+.kid-chip{
+  flex-shrink:0;min-height:44px;padding:0 16px;border-radius:22px;
+  border:1.5px solid var(--line);background:var(--surface);
+  font-weight:600;font-size:15px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+}
+.kid-chip[aria-pressed="true"]{background:var(--peach);border-color:var(--peach);color:var(--on-peach);font-weight:700}
+.kid-chip.add{color:var(--muted);border-style:dashed}
+.tabbar{
+  margin-top:10px;display:flex;gap:2px;padding:4px;
+  border-radius:14px;background:var(--seg-bg);
+}
+.tabbar button{
+  flex:1;min-height:46px;border:none;border-radius:11px;background:transparent;
+  font-size:16px;font-weight:600;cursor:pointer;color:var(--muted);
+}
+.tabbar button[aria-selected="true"]{background:var(--seg-on);color:var(--text);font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+
+/* ================= SETUP ================= */
+.setup{display:flex;flex-direction:column;gap:12px;padding-top:24px}
+.setup .title{font-size:32px}
+.setup-sub{color:var(--muted)}
+.steps{display:flex;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.steps span{padding:4px 12px;border-radius:20px;background:var(--seg-bg)}
+.steps span.on{background:var(--peach);color:var(--on-peach)}
+.kid-row,.birth-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px;display:flex;flex-direction:column;gap:10px;
+}
+.kid-row-head{display:flex;gap:8px;align-items:center}
+.kid-row-head .del-btn{width:44px;height:44px;flex-shrink:0}
+.kid-row:only-child .kid-remove{display:none}
+.birth-card h3{font-family:var(--font-display);font-size:22px;font-weight:800}
+.birth-card .field{margin-top:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two .field-label{font-size:14px}
+.wide{width:100%}
+.setup-actions{display:flex;gap:10px;align-items:stretch}
+.setup-actions .save-btn{margin-top:0}
+.setup-actions .ghost-btn{min-height:56px}
+select.text-input{appearance:auto}
+
+/* ================= REPORTS ================= */
+.reports{margin-top:18px;display:flex;flex-direction:column;gap:16px}
+.r-block{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;
+}
+.r-block h2{font-family:var(--font-display);font-size:21px;font-weight:800}
+.r-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.r-hint{color:var(--muted);font-size:14px;margin-top:4px}
+.r-hint.due{color:var(--warn);font-weight:600}
+.kid-card{
+  background:var(--pocket);color:var(--pocket-text);border-radius:24px;padding:20px;
+  box-shadow:var(--shadow);
+}
+.kid-card .k-name{font-family:var(--font-display);font-size:30px;font-weight:800;line-height:1.1}
+.kid-card .k-age{font-size:18px;font-weight:600;margin-top:4px}
+.kid-card .k-born{color:var(--pocket-sub);font-size:14px;margin-top:2px}
+.kid-card dl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.kid-card dt{color:var(--pocket-sub);font-size:12px}
+.kid-card dd{font-weight:700;font-size:15px}
+.kid-card .ghost-btn{margin-top:14px;width:100%;border-color:var(--pocket-stitch);color:var(--pocket-text)}
+.chart{margin-top:12px;direction:ltr;max-width:560px}
+.chart svg{width:100%;height:auto;display:block}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.stat{background:var(--seg-bg);border-radius:14px;padding:10px;text-align:center}
+.stat b{display:block;font-family:var(--font-display);font-size:22px;font-weight:800;line-height:1.2}
+.stat span{color:var(--muted);font-size:12px}
+.g-diff{font-size:13px;font-weight:600;color:var(--ok)}
+.g-diff.down{color:var(--danger)}
+.print-only{display:none}
 
 /* ================= STAR BUTTON (MuhammadHasann) ================= */
 .action{margin:26px 0 8px;isolation:isolate}
@@ -349,6 +441,10 @@ button,input{font-family:inherit;color:inherit}
   color:var(--text);font-weight:500;
   transition:all .15s ease-in-out;position:relative;
 }
+#segAmount .radio{min-width:44px}
+.seg .radio .name.stack{flex-direction:column;line-height:1.15;padding:6px 4px}
+.seg .radio .name.stack b{font-family:var(--font-display);font-size:22px;font-weight:800}
+.seg .radio .name.stack small{font-size:11px;color:var(--muted);font-weight:500}
 .seg .radio input:focus-visible + .name{outline:2px solid var(--peach-deep);outline-offset:-2px}
 .seg .radio input:checked + .name{
   background-color:var(--seg-on);font-weight:700;
@@ -563,24 +659,33 @@ button,input{font-family:inherit;color:inherit}
     align-items:start;
   }
   #appView > .top{grid-column:1 / -1;grid-row:1;padding-bottom:8px}
-  #appView > .mode-banner{grid-column:1 / -1;grid-row:2}
-  #appView > .net-banner{grid-column:1 / -1;grid-row:3}
+  #appView > .kids{grid-column:1 / -1;grid-row:2}
+  #appView > .tabbar{grid-column:1 / -1;grid-row:3;justify-self:start;width:min(400px,100%)}
+  #appView > .mode-banner{grid-column:1 / -1;grid-row:4}
+  #appView > .net-banner{grid-column:1 / -1;grid-row:5}
+  #appView > .reports{
+    grid-column:1 / -1;grid-row:6;
+    display:grid;grid-template-columns:400px minmax(0,1fr);gap:20px 40px;align-items:start;
+  }
+  #appView > .reports > .kid-card{grid-column:1;grid-row:1 / span 3}
+  #appView > .reports > :not(.kid-card){grid-column:2}
   #appView > .side{
-    grid-column:1;grid-row:4;margin-top:20px;
+    grid-column:1;grid-row:6;margin-top:20px;
     position:sticky;top:24px;
     background:var(--surface);border:1px solid var(--line);
     border-radius:28px;padding:8px 24px 24px;
     box-shadow:var(--shadow);
   }
   #appView > .history{
-    grid-column:2;grid-row:4;margin-top:20px;
+    grid-column:2;grid-row:6;margin-top:20px;
     background:var(--surface);border:1px solid var(--line);
     border-radius:28px;padding:22px 26px 10px;
     box-shadow:var(--shadow);
   }
-  #appView > .foot{grid-column:2;grid-row:5}
+  #appView > .foot{grid-column:2;grid-row:7}
   .title{font-size:32px}
-  .side .wallet-wrap{padding-top:88px}
+  .side .bag-wrap{padding-top:88px}
+  .side .bag-wrap.open{padding-top:310px}
   .side .action{margin:22px 0 0}
   .history h2{font-size:24px}
   .day:first-child{margin-top:10px}
@@ -590,6 +695,27 @@ button,input{font-family:inherit;color:inherit}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
+}
+
+/* ================= PRINT / PDF REPORT ================= */
+.pr{
+  --text:#1d1411;--muted:#6b5a54;--line:#d9ccc6;--peach-deep:#c8743f;--peach:#fec195;
+  color:var(--text);background:#fff;font-size:12pt;line-height:1.5;
+}
+.pr h1{font-family:var(--font-display);font-size:24pt;line-height:1.1}
+.pr h2{font-family:var(--font-display);font-size:15pt;margin:18px 0 6px;border-bottom:2px solid var(--peach);padding-bottom:2px}
+.pr .pr-sub{color:var(--muted);font-size:10pt}
+.pr table{width:100%;border-collapse:collapse;font-size:10.5pt}
+.pr th,.pr td{border:1px solid var(--line);padding:4px 8px;text-align:right}
+.pr th{background:#f6eee9;font-weight:600}
+.pr .chart{max-width:560px}
+.pr .pr-foot{margin-top:18px;color:var(--muted);font-size:9pt}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff !important}
+  body > *:not(#printReport){display:none !important}
+  #printReport{display:block !important}
+  .pr h2,.pr tr{break-inside:avoid}
 }
 </style>
 </head>
@@ -616,11 +742,37 @@ button,input{font-family:inherit;color:inherit}
   </div>
 </main>
 
+<!-- ============ SETUP (first run / add child / edit birth info) ============ -->
+<main class="app hidden" id="setupView">
+  <form class="setup" id="setupNames" novalidate>
+    <div class="title" id="namesTitle">أهلاً بيكم</div>
+    <p class="setup-sub">اكتبوا اسم الطفل وحددوا بنت لو ولد. إذا عدكم أكثر من طفل ضيفوهم هنا.</p>
+    <div class="steps"><span class="on">1. الأسماء</span><span>2. الولادة</span></div>
+    <div id="kidRows" style="display:flex;flex-direction:column;gap:10px"></div>
+    <button class="ghost-btn wide" type="button" id="addKidRow">+ ضيف طفل ثاني</button>
+    <div class="form-error" id="namesError"></div>
+    <button class="save-btn" type="submit">التالي</button>
+    <button class="link-btn hidden setup-cancel" type="button">إلغاء</button>
+  </form>
+  <form class="setup hidden" id="setupBirth" novalidate>
+    <div class="title" id="birthTitle">معلومات الولادة</div>
+    <p class="setup-sub">تاريخ الولادة ضروري حتى نحسب العمر. الباقي اختياري وتگدرون تكملوه بعدين.</p>
+    <div class="steps" id="birthSteps"><span>1. الأسماء</span><span class="on">2. الولادة</span></div>
+    <div id="birthCards" style="display:flex;flex-direction:column;gap:12px"></div>
+    <div class="form-error" id="birthError"></div>
+    <div class="setup-actions">
+      <button class="ghost-btn" type="button" id="setupBack">رجوع</button>
+      <button class="save-btn" type="submit" id="setupSave">احفظ وابدأ</button>
+    </div>
+    <button class="link-btn hidden setup-cancel" type="button">إلغاء</button>
+  </form>
+</main>
+
 <!-- ============ APP ============ -->
 <main class="app hidden" id="appView">
   <header class="top">
     <div>
-      <div class="title">رضعات سما</div>
+      <div class="title" id="appTitle">رضعات</div>
       <div class="today-date" id="todayDate"></div>
     </div>
     <label class="theme-switch" aria-label="الوضع الليلي">
@@ -643,6 +795,12 @@ button,input{font-family:inherit;color:inherit}
     </label>
   </header>
 
+  <div class="kids" id="kidsBar" aria-label="الأطفال"></div>
+  <nav class="tabbar" role="tablist" aria-label="الصفحات">
+    <button type="button" role="tab" id="tabFeeds" aria-selected="true">الرضعات</button>
+    <button type="button" role="tab" id="tabReports" aria-selected="false">التقارير</button>
+  </nav>
+
   <div class="mode-banner hidden" id="modeBanner">وضع تجريبي: البيانات محفوظة على هذا الجهاز بس. اربط Supabase حتى تتزامن.</div>
   <div class="net-banner hidden" id="netBanner" role="alert">
     <span id="netText">ما كو إنترنت. السجل يمكن مو محدّث.</span>
@@ -651,26 +809,31 @@ button,input{font-family:inherit;color:inherit}
 
   <!-- Side column on desktop: summary + main action -->
   <div class="side">
-  <!-- Summary wallet -->
-  <section class="wallet-wrap">
-    <div class="wallet" id="wallet" role="button" tabindex="0" aria-expanded="false" aria-label="ملخص اليوم، اضغط لعرض آخر الرضعات">
-      <div class="wallet-back"></div>
+  <!-- Summary bag -->
+  <section class="bag-wrap">
+    <div class="bag" id="bag" role="button" tabindex="0" aria-expanded="false" aria-label="ملخص اليوم، اضغط لعرض آخر الرضعات">
+      <div class="bag-handle"></div>
+      <div class="bag-back"></div>
       <div class="feed-card c1" id="card1"></div>
       <div class="feed-card c2" id="card2"></div>
       <div class="feed-card c3" id="card3"></div>
-      <div class="pocket">
-        <svg viewBox="0 0 280 160" fill="none" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M 0 20 C 0 10, 5 10, 10 10 C 20 10, 25 25, 40 25 L 240 25 C 255 25, 260 10, 270 10 C 275 10, 280 10, 280 20 L 280 120 C 280 155, 260 160, 240 160 L 40 160 C 20 160, 0 155, 0 120 Z" fill="var(--pocket)"></path>
-          <path d="M 8 22 C 8 16, 12 16, 15 16 C 23 16, 27 29, 40 29 L 240 29 C 253 29, 257 16, 265 16 C 268 16, 272 16, 272 22 L 272 120 C 272 150, 255 152, 240 152 L 40 152 C 25 152, 8 152, 8 120 Z" stroke="var(--pocket-stitch)" stroke-width="1.5" stroke-dasharray="6 4"></path>
+      <div class="bag-front">
+        <svg viewBox="0 0 300 180" fill="none" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M 0 14 C 0 6, 6 0, 14 0 L 286 0 C 294 0, 300 6, 300 14 L 300 136 C 300 162, 280 180, 254 180 L 46 180 C 20 180, 0 162, 0 136 Z" fill="var(--pocket)"></path>
+          <path d="M 0 14 C 0 6, 6 0, 14 0 L 286 0 C 294 0, 300 6, 300 14 L 300 26 C 240 52, 190 58, 150 58 C 110 58, 60 52, 0 26 Z" fill="var(--pocket-stitch)" opacity=".55"></path>
+          <path d="M 10 30 C 64 54, 112 64, 150 64 C 188 64, 236 54, 290 30" stroke="var(--pocket-stitch)" stroke-width="1.5" stroke-dasharray="6 4"></path>
+          <path d="M 12 40 L 12 136 C 12 154, 26 168, 46 168 L 254 168 C 274 168, 288 154, 288 136 L 288 40" stroke="var(--pocket-stitch)" stroke-width="1.5" stroke-dasharray="6 4"></path>
+          <rect x="138" y="50" width="24" height="18" rx="6" fill="var(--peach)"></rect>
+          <circle cx="150" cy="59" r="3.5" fill="var(--pocket)"></circle>
         </svg>
-        <div class="pocket-content">
+        <div class="bag-content">
           <div class="total" id="sumTotal">0 <small>مل</small></div>
           <div class="sub" id="sumSub">مجموع اليوم</div>
           <div class="last" id="sumLast">ما كو رضعات بعد</div>
         </div>
       </div>
     </div>
-    <div class="wallet-hint" id="walletHint">اضغط لعرض آخر الرضعات</div>
+    <div class="bag-hint" id="bagHint">اضغط على الجنطة حتى تطلع آخر الرضعات</div>
   </section>
 
   <!-- Main action -->
@@ -692,6 +855,25 @@ button,input{font-family:inherit;color:inherit}
     <h2>السجل</h2>
     <div class="history-hint">اضغط على أي رضعة حتى تعدّلها</div>
     <div id="historyList"></div>
+  </section>
+
+  <!-- Reports -->
+  <section class="reports hidden" id="reportsPage" role="tabpanel" aria-labelledby="tabReports">
+    <div class="kid-card" id="kidCard"></div>
+    <div class="r-block">
+      <div class="r-head">
+        <h2>الوزن والطول</h2>
+        <button class="ghost-btn" type="button" id="addGrowthBtn">+ قياس جديد</button>
+      </div>
+      <div class="r-hint" id="growthHint"></div>
+      <div class="chart" id="growthChart"></div>
+      <div id="growthList"></div>
+    </div>
+    <div class="r-block">
+      <h2>الرضعات آخر 7 أيام</h2>
+      <div class="stats" id="feedStats"></div>
+    </div>
+    <button class="save-btn" type="button" id="pdfBtn">طلّع تقرير PDF</button>
   </section>
 
   <div class="foot">
@@ -716,19 +898,33 @@ button,input{font-family:inherit;color:inherit}
   </div>
 
   <div class="field">
-    <span class="field-label">الكمية</span>
+    <span class="field-label">نوع الرضاعة</span>
+    <div class="seg" id="segType"></div>
+  </div>
+
+  <div class="field" id="amountField">
+    <span class="field-label">الكمية (الرقم على الممية)</span>
     <div class="seg" id="segAmount"></div>
     <div class="field-row hidden" id="customAmountRow" style="margin-top:10px">
       <input class="text-input" type="number" inputmode="numeric" min="1" max="1000" id="customAmount" placeholder="اكتب الكمية بالمل">
     </div>
   </div>
 
-  <div class="field">
-    <span class="field-label">رقم الحليب</span>
-    <div class="seg" id="segFormula"></div>
+  <div id="breastFields" class="hidden">
+    <div class="field">
+      <span class="field-label">المدة بالدقايق</span>
+      <div class="seg" id="segDuration"></div>
+      <div class="field-row hidden" id="customDurationRow" style="margin-top:10px">
+        <input class="text-input" type="number" inputmode="numeric" min="1" max="300" id="customDuration" placeholder="اكتب المدة بالدقايق">
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">الجهة</span>
+      <div class="seg" id="segSide"></div>
+    </div>
   </div>
 
-  <div class="field">
+  <div class="field" id="byField">
     <span class="field-label">منو أعطاها</span>
     <div class="seg" id="segBy"></div>
   </div>
@@ -749,6 +945,44 @@ button,input{font-family:inherit;color:inherit}
   <button class="save-btn" type="submit" id="saveBtn">سجّل الرضعة</button>
   <div class="form-error" id="formError"></div>
 </form>
+
+<!-- Growth sheet -->
+<form class="sheet" id="growthSheet" aria-label="قياس جديد" novalidate>
+  <div class="grabber"></div>
+  <div class="sheet-head">
+    <h3 id="growthTitle">قياس جديد</h3>
+    <button class="sheet-close" type="button" data-close aria-label="سد">
+      <svg viewBox="0 0 15 15" fill="none" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z"/></svg>
+    </button>
+  </div>
+  <div class="field">
+    <label for="gDate">التاريخ</label>
+    <input class="text-input" type="date" id="gDate">
+  </div>
+  <div class="field">
+    <label for="gWeight">الوزن (كغم)</label>
+    <input class="text-input" type="number" inputmode="decimal" step="0.01" min="0.3" max="40" id="gWeight" placeholder="مثلاً 3.85" dir="ltr">
+  </div>
+  <div class="two field">
+    <div>
+      <label class="field-label" for="gLength">الطول (سم)</label>
+      <input class="text-input" type="number" inputmode="decimal" step="0.1" min="20" max="150" id="gLength" dir="ltr">
+    </div>
+    <div>
+      <label class="field-label" for="gHead">محيط الراس (سم)</label>
+      <input class="text-input" type="number" inputmode="decimal" step="0.1" min="15" max="60" id="gHead" dir="ltr">
+    </div>
+  </div>
+  <div class="field">
+    <label for="gNote">ملاحظة (اختياري)</label>
+    <input class="text-input" type="text" id="gNote" maxlength="200" placeholder="مثلاً: وزن عند الدكتور">
+  </div>
+  <button class="save-btn" type="submit" id="gSave">احفظ القياس</button>
+  <div class="form-error" id="gError"></div>
+</form>
+
+<!-- PDF report (print only) -->
+<div class="print-only pr" id="printReport"></div>
 
 <!-- Toast -->
 <div class="toast" id="toast" role="status" aria-live="polite">
@@ -774,9 +1008,15 @@ button,input{font-family:inherit;color:inherit}
 const SUPABASE_URL = 'https://vakelwjiktrbpsophlps.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_vOU3O6bbUzoLE9Plf-7nqw_eT40tVEX';
 
-const AMOUNTS  = [30, 60, 90, 120, 150];
-const FORMULAS = ['1', '2', '3'];
-const GIVERS   = ['ماما', 'بابا', 'غيرهم'];
+const ML_PER_UNIT = 30;                    // الرقم المكتوب على الممية: 1 = 30 مل
+const UNITS      = [1, 2, 3, 4, 5];
+const DURATIONS  = [5, 10, 15, 20, 30];    // دقايق الرضاعة الطبيعية
+const GIVERS     = ['ماما', 'بابا', 'غيرهم'];
+const FEED_TYPES = { formula:'صناعي', breast:'طبيعي' };
+const SIDES      = { right:'يمين', left:'يسار', both:'الثنتين' };
+const SEXES      = { girl:'بنت', boy:'ولد' };
+const DELIVERY   = { natural:'طبيعية', csection:'قيصرية' };
+const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
 /* ---------------- helpers ---------------- */
 const $ = id => document.getElementById(id);
@@ -785,6 +1025,8 @@ function safeGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null
 function safeSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtTime(d){ return d.toLocaleTimeString(LOCALE,{hour:'numeric',minute:'2-digit'}); }
+function fmtDate(d){ return d.toLocaleDateString(LOCALE,{day:'numeric',month:'long',year:'numeric'}); }
+function fmtDateTime(d){ return fmtDate(d) + '، ' + fmtTime(d); }
 function dayKey(d){ return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
 function startOfToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
 function dayLabel(d){
@@ -803,10 +1045,51 @@ function agoText(ms){
   if (m) parts.push(m + ' دقيقة');
   return 'قبل ' + parts.join(' و');
 }
+const p2 = n => String(n).padStart(2,'0');
 function toLocalInput(d){
-  const p = n => String(n).padStart(2,'0');
-  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
+  return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+'T'+p2(d.getHours())+':'+p2(d.getMinutes());
 }
+function toLocalDate(d){ return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()); }
+// '2026-10-19' → تاريخ محلي (بدون ما يزحف يوم بسبب UTC)
+function parseDay(s){ const [y,m,d] = String(s).split('-').map(Number); return new Date(y, m-1, d); }
+function daysBetween(a, b){
+  const x = new Date(a); x.setHours(0,0,0,0);
+  const y = new Date(b); y.setHours(0,0,0,0);
+  return Math.round((y - x) / 864e5);
+}
+// عدد + كلمة بالعامية: 1 شهر، شهرين، 3 أشهر، 11 شهر
+function countWord(n, one, two, few){
+  if (n === 1) return one;
+  if (n === 2) return two;
+  return n + ' ' + (n <= 10 ? few : one);
+}
+function ageText(birth, at){
+  at = at || new Date();
+  const days = daysBetween(birth, at);
+  if (days < 0) return '';
+  if (days === 0) return 'أول يوم';
+  if (days < 14) return countWord(days,'يوم','يومين','أيام');
+  if (days < 84){
+    const w = Math.floor(days/7), d = days%7;
+    return countWord(w,'أسبوع','أسبوعين','أسابيع') + (d ? ' و' + countWord(d,'يوم','يومين','أيام') : '');
+  }
+  let m = (at.getFullYear()-birth.getFullYear())*12 + at.getMonth()-birth.getMonth();
+  if (at.getDate() < birth.getDate()) m--;
+  const anchor = new Date(birth); anchor.setMonth(anchor.getMonth()+m);
+  const d = Math.max(0, daysBetween(anchor, at));
+  const y = Math.floor(m/12), mm = m%12;
+  const parts = [];
+  if (y) parts.push(countWord(y,'سنة','سنتين','سنوات'));
+  if (mm) parts.push(countWord(mm,'شهر','شهرين','أشهر'));
+  if (d) parts.push(countWord(d,'يوم','يومين','أيام'));
+  return parts.join(' و');
+}
+function num(v){ return (v === '' || v == null) ? null : Number(v); }
+function kg(g){ return (g/1000).toFixed(2) + ' كغم'; }
+function gramsDiff(g){ return (g > 0 ? '+' : '') + g + ' غرام'; }
+const isBreast = f => f.feed_type === 'breast';
+const isGirl = c => !c || c.sex !== 'boy';
+const her = c => isGirl(c) ? 'ها' : 'ه';
 
 /* ---------------- data store ---------------- */
 const supabaseConfigured = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
@@ -814,54 +1097,83 @@ const supabaseConfigured = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
 const supabaseMissing = supabaseConfigured && !window.supabase;
 const useSupabase = supabaseConfigured && !!window.supabase;
 const sb = useSupabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-let feeds = [];
 
-const localStore = {
-  key:'sama_feeds_v1',
-  read(){ try{ return JSON.parse(safeGet(this.key) || '[]'); }catch(e){ return []; } },
-  write(a){ safeSet(this.key, JSON.stringify(a)); },
-  async list(){ return this.read().sort((a,b)=> new Date(b.fed_at) - new Date(a.fed_at)); },
-  async add(f){
-    const row = { id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), ...f };
-    const a = this.read(); a.push(row); this.write(a); return row;
-  },
-  async update(id, f){
-    let row = null;
-    this.write(this.read().map(r => r.id === id ? (row = { ...r, ...f }) : r));
-    if (!row) throw new Error('not found');
-    return row;
-  },
-  async remove(id){ this.write(this.read().filter(r => r.id !== id)); }
-};
+let feeds = [];      // رضعات الطفل الحالي (آخر 30 يوم)
+let children = [];
+let growth = [];     // قياسات الطفل الحالي
+let currentId = null;
 
-const supaStore = {
-  async list(){
+function localTable(key){
+  return {
+    read(){ try{ return JSON.parse(safeGet(key) || '[]'); }catch(e){ return []; } },
+    write(a){ safeSet(key, JSON.stringify(a)); },
+    async list(childId){ return this.read().filter(r => !childId || r.child_id === childId); },
+    async add(f){
+      const row = { id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())), created_at: new Date().toISOString(), ...f };
+      const a = this.read(); a.push(row); this.write(a); return row;
+    },
+    async update(id, f){
+      let row = null;
+      this.write(this.read().map(r => r.id === id ? (row = { ...r, ...f }) : r));
+      if (!row) throw new Error('not found');
+      return row;
+    },
+    async remove(id){ this.write(this.read().filter(r => r.id !== id)); }
+  };
+}
+
+function supaTable(table, cols, prep){
+  return {
+    async list(childId){
+      let q = sb.from(table).select(cols);
+      if (childId) q = q.eq('child_id', childId);
+      if (prep) q = prep(q);
+      const { data, error } = await q;
+      if (error) throw error;
+      return data;
+    },
+    async add(f){
+      const { data, error } = await sb.from(table).insert(f).select(cols).single();
+      if (error) throw error;
+      return data;
+    },
+    async update(id, f){
+      const { data, error } = await sb.from(table).update(f).eq('id', id).select(cols).single();
+      if (error) throw error;
+      return data;
+    },
+    async remove(id){
+      const { error } = await sb.from(table).delete().eq('id', id);
+      if (error) throw error;
+    }
+  };
+}
+
+const FEED_COLS   = 'id,child_id,fed_at,feed_type,amount_ml,duration_min,breast_side,given_by,note';
+const CHILD_COLS  = 'id,name,sex,birth_at,birth_weight_g,birth_length_cm,birth_head_cm,delivery_type,gestation_weeks,hospital,blood_type,notes,created_at';
+const GROWTH_COLS = 'id,child_id,measured_on,weight_g,length_cm,head_cm,note';
+const CHILD_FIELDS = ['name','sex','birth_at','birth_weight_g','birth_length_cm','birth_head_cm','delivery_type','gestation_weeks','hospital','blood_type','notes'];
+
+const store = useSupabase ? {
+  feeds: supaTable('feeds', FEED_COLS, q => {
     const since = new Date(); since.setDate(since.getDate()-30);
-    const { data, error } = await sb.from('feeds')
-      .select('id,fed_at,amount_ml,formula_no,given_by,note')
-      .gte('fed_at', since.toISOString())
-      .order('fed_at', { ascending:false })
-      .limit(500);
-    if (error) throw error;
-    return data;
-  },
-  async add(f){
-    const { data, error } = await sb.from('feeds').insert(f).select().single();
-    if (error) throw error;
-    return data;
-  },
-  async update(id, f){
-    const { data, error } = await sb.from('feeds').update(f).eq('id', id)
-      .select('id,fed_at,amount_ml,formula_no,given_by,note').single();
-    if (error) throw error;
-    return data;
-  },
-  async remove(id){
-    const { error } = await sb.from('feeds').delete().eq('id', id);
-    if (error) throw error;
-  }
+    return q.gte('fed_at', since.toISOString()).order('fed_at', { ascending:false }).limit(500);
+  }),
+  children: supaTable('children', CHILD_COLS, q => q.order('created_at')),
+  growth: supaTable('growth', GROWTH_COLS, q => q.order('measured_on'))
+} : {
+  feeds: localTable('sama_feeds_v1'),
+  children: localTable('sama_children_v1'),
+  growth: localTable('sama_growth_v1')
 };
-const store = useSupabase ? supaStore : localStore;
+// الرضعات اللي انسجلت قبل ما نضيف الأطفال تنربط بأول طفل
+store.feeds.adopt = useSupabase
+  ? async id => { const { error } = await sb.from('feeds').update({ child_id:id }).is('child_id', null); if (error) throw error; }
+  : async id => { const t = store.feeds; t.write(t.read().map(r => r.child_id ? r : { ...r, child_id:id })); };
+
+const sortFeeds  = a => a.sort((x,y) => new Date(y.fed_at) - new Date(x.fed_at));
+const sortGrowth = a => a.sort((x,y) => String(x.measured_on).localeCompare(String(y.measured_on)));
+function current(){ return children.find(c => c.id === currentId) || null; }
 
 function setNetStatus(problem){
   // problem: null = كلشي تمام، 'offline' = ما كو نت، 'error' = فشل جلب السجل
@@ -872,11 +1184,57 @@ function setNetStatus(problem){
     : 'ما كدرت أجيب السجل. تأكد من الإنترنت.';
 }
 
+async function loadChildren(){
+  children = (await store.children.list()).sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+  safeSet('sama_children_cache', JSON.stringify(children));
+  pickChild();
+}
+function pickChild(){
+  if (children.some(c => c.id === currentId)) return;
+  const saved = safeGet('sama_child');
+  currentId = children.some(c => c.id === saved) ? saved : (children[0] ? children[0].id : null);
+}
+
+// أول تشغيل: نجيب الأطفال، إذا ما كو نروح لصفحة الإعداد
+async function start(){
+  try{ await loadChildren(); }
+  catch(e){
+    console.error(e);
+    try{ children = JSON.parse(safeGet('sama_children_cache') || '[]'); }catch(err){ children = []; }
+    pickChild();
+    showApp(); render();
+    setNetStatus(navigator.onLine ? 'error' : 'offline');
+    if (children.length) reload();
+    return;
+  }
+  if (!children.length){ showSetup('first'); return; }
+  showApp(); render();
+  await reload();
+}
+
 async function reload(){
+  if (!$('setupView').classList.contains('hidden')) return;   // لا نخرّب الإعداد وهو ينكتب
+  if (!children.length) return start();
   if (useSupabase && !navigator.onLine){ setNetStatus('offline'); render(); return; }
-  try{ feeds = await store.list(); setNetStatus(null); }
-  catch(e){ console.error(e); setNetStatus('error'); }
+  const id = currentId;
+  try{
+    const [f, g] = await Promise.all([store.feeds.list(id), store.growth.list(id)]);
+    if (id !== currentId) return;   // تبدّل الطفل وإحنا ننتظر
+    feeds = sortFeeds(f); growth = sortGrowth(g);
+    setNetStatus(null);
+  }catch(e){ console.error(e); setNetStatus('error'); }
   render();
+}
+
+async function refreshChildren(){
+  if (!$('setupView').classList.contains('hidden')) return;
+  try{
+    const before = currentId;
+    await loadChildren();
+    if (!children.length){ showSetup('first'); return; }
+    render();
+    if (currentId !== before){ feeds = []; growth = []; reload(); }
+  }catch(e){ console.error(e); }
 }
 
 /* ---------------- theme ---------------- */
@@ -895,6 +1253,33 @@ function applyTheme(t){
   });
 })();
 
+/* ---------------- feed formatting ---------------- */
+function feedParts(f){
+  if (isBreast(f)) return {
+    main: f.duration_min, unit:'دقيقة', lbl:'المدة',
+    meta: ['طبيعي', SIDES[f.breast_side]].filter(Boolean)
+  };
+  const ml = Number(f.amount_ml) || 0, u = ml / ML_PER_UNIT;
+  return {
+    main: ml, unit:'مل', lbl:'الكمية',
+    meta: [Number.isInteger(u) ? 'الرقم ' + u : '', esc(f.given_by || '')].filter(Boolean)
+  };
+}
+function feedText(f){
+  if (isBreast(f)) return 'طبيعي ' + f.duration_min + ' دقيقة';
+  const ml = Number(f.amount_ml) || 0, u = ml / ML_PER_UNIT;
+  return ml + ' مل' + (Number.isInteger(u) ? ' (الرقم ' + u + ')' : '');
+}
+function sumFeeds(list){
+  return list.reduce((s,f) => {
+    s.n++;
+    if (isBreast(f)) s.mins += Number(f.duration_min) || 0;
+    else s.ml += Number(f.amount_ml) || 0;
+    return s;
+  }, { n:0, ml:0, mins:0 });
+}
+const feedsWord = n => n === 1 ? ' رضعة' : ' رضعات';
+
 /* ---------------- render ---------------- */
 function cardHTML(f, label){
   if (!f){
@@ -903,21 +1288,31 @@ function cardHTML(f, label){
   }
   const d = new Date(f.fed_at);
   const dayNote = d < startOfToday() ? ' (' + dayLabel(d) + ')' : '';
+  const p = feedParts(f);
   return `<div class="inner">
     <div class="row-top"><span>${label}${dayNote}</span><span class="time">${fmtTime(d)}</span></div>
     <div class="row-bottom">
-      <div><span class="lbl">الكمية</span><span class="amt">${f.amount_ml}<small>مل</small></span></div>
-      <div class="meta">${f.formula_no ? 'حليب رقم ' + esc(f.formula_no) : ''}${f.given_by ? '<br>' + esc(f.given_by) : ''}</div>
+      <div><span class="lbl">${p.lbl}</span><span class="amt">${esc(p.main)}<small>${p.unit}</small></span></div>
+      <div class="meta">${p.meta.join('<br>')}</div>
     </div></div>`;
+}
+
+function renderKids(){
+  $('kidsBar').innerHTML = children.map(c =>
+    `<button type="button" class="kid-chip" data-kid="${esc(c.id)}" aria-pressed="${c.id === currentId}">${esc(c.name)}</button>`
+  ).join('') + `<button type="button" class="kid-chip add" aria-label="ضيف طفل">+ طفل</button>`;
+  const c = current();
+  $('appTitle').textContent = c ? 'رضعات ' + c.name : 'رضعات';
+  document.title = $('appTitle').textContent;
+  document.querySelector('#byField .field-label').textContent = 'منو أعطا' + her(c);
 }
 
 function renderSummary(){
   const today = startOfToday();
-  const todays = feeds.filter(f => new Date(f.fed_at) >= today);
-  const total = todays.reduce((s,f) => s + (Number(f.amount_ml)||0), 0);
-  $('sumTotal').innerHTML = total + ' <small>مل</small>';
-  $('sumSub').textContent = todays.length
-    ? 'مجموع اليوم، ' + todays.length + (todays.length === 1 ? ' رضعة' : ' رضعات')
+  const s = sumFeeds(feeds.filter(f => new Date(f.fed_at) >= today));
+  $('sumTotal').innerHTML = s.ml + ' <small>مل</small>';
+  $('sumSub').textContent = s.n
+    ? 'مجموع اليوم، ' + s.n + feedsWord(s.n) + (s.mins ? '، ' + s.mins + ' دقيقة طبيعي' : '')
     : 'مجموع اليوم';
   $('sumLast').textContent = feeds[0]
     ? 'آخر رضعة ' + agoText(Date.now() - new Date(feeds[0].fed_at))
@@ -931,6 +1326,8 @@ function renderSummary(){
   });
   $('todayDate').textContent = new Date().toLocaleDateString(LOCALE,{weekday:'long',day:'numeric',month:'long'});
 }
+
+const TRASH_SVG = '<svg viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>';
 
 function renderHistory(){
   const box = $('historyList');
@@ -946,44 +1343,84 @@ function renderHistory(){
     map[k].items.push(f);
   });
   box.innerHTML = groups.map(g => {
-    const sum = g.items.reduce((s,f) => s + (Number(f.amount_ml)||0), 0);
-    const n = g.items.length;
+    const s = sumFeeds(g.items);
     return `<div class="day">
       <div class="day-head"><span class="day-name">${dayLabel(g.date)}</span>
-        <span class="day-sum">${sum} مل، ${n} ${n === 1 ? 'رضعة' : 'رضعات'}</span></div>
+        <span class="day-sum">${s.ml} مل${s.mins ? '، ' + s.mins + ' دقيقة طبيعي' : ''}، ${s.n}${feedsWord(s.n)}</span></div>
       ${g.items.map(f => {
-        const meta = [f.formula_no ? 'حليب رقم ' + esc(f.formula_no) : '', esc(f.given_by || '')].filter(Boolean).join('، ');
-        return `<div class="entry" data-id="${esc(f.id)}" role="button" tabindex="0" aria-label="عدّل رضعة ${f.amount_ml} مل، ${fmtTime(new Date(f.fed_at))}">
+        const p = feedParts(f);
+        return `<div class="entry" data-id="${esc(f.id)}" role="button" tabindex="0" aria-label="عدّل رضعة ${esc(feedText(f))}، ${fmtTime(new Date(f.fed_at))}">
           <div class="entry-time">${fmtTime(new Date(f.fed_at))}</div>
           <div>
-            <div class="entry-amt">${f.amount_ml}<small>مل</small></div>
-            ${meta ? `<div class="entry-meta">${meta}</div>` : ''}
+            <div class="entry-amt">${esc(p.main)}<small>${p.unit}</small></div>
+            ${p.meta.length ? `<div class="entry-meta">${p.meta.join('، ')}</div>` : ''}
             ${f.note ? `<div class="entry-note">${esc(f.note)}</div>` : ''}
           </div>
-          <button class="del-btn" type="button" data-id="${esc(f.id)}" aria-label="احذف هاي الرضعة">
-            <svg viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
-          </button>
+          <button class="del-btn" type="button" data-id="${esc(f.id)}" aria-label="احذف هاي الرضعة">${TRASH_SVG}</button>
         </div>`;
       }).join('')}
     </div>`;
   }).join('');
 }
 
-function render(){ renderSummary(); renderHistory(); }
+function render(){
+  renderKids();
+  renderSummary();
+  renderHistory();
+  if (page === 'reports') renderReports();
+}
 
-/* ---------------- wallet toggle ---------------- */
+/* ---------------- tabs ---------------- */
+let page = safeGet('sama_page') === 'reports' ? 'reports' : 'feeds';
+function setPage(p){
+  page = p;
+  safeSet('sama_page', p);
+  $('tabFeeds').setAttribute('aria-selected', p === 'feeds');
+  $('tabReports').setAttribute('aria-selected', p === 'reports');
+  document.querySelector('#appView > .side').classList.toggle('hidden', p !== 'feeds');
+  document.querySelector('#appView > .history').classList.toggle('hidden', p !== 'feeds');
+  $('reportsPage').classList.toggle('hidden', p !== 'reports');
+  if (p === 'reports') renderReports();
+}
+$('tabFeeds').addEventListener('click', () => setPage('feeds'));
+$('tabReports').addEventListener('click', () => setPage('reports'));
+setPage(page);
+
+/* ---------------- child switcher ---------------- */
+$('kidsBar').addEventListener('click', e => {
+  const b = e.target.closest('.kid-chip');
+  if (!b) return;
+  if (b.classList.contains('add')){ showSetup('add'); return; }
+  if (b.dataset.kid === currentId) return;
+  currentId = b.dataset.kid;
+  safeSet('sama_child', currentId);
+  feeds = []; growth = [];
+  render(); reload();
+});
+
+/* ---------------- bag toggle ---------------- */
 (function(){
-  const w = $('wallet');
+  const bag = $('bag');
   function toggle(){
-    const open = w.classList.toggle('open');
-    w.setAttribute('aria-expanded', open);
-    $('walletHint').textContent = open ? 'اضغط للإغلاق' : 'اضغط لعرض آخر الرضعات';
+    const open = bag.classList.toggle('open');
+    bag.parentElement.classList.toggle('open', open);
+    bag.setAttribute('aria-expanded', open);
+    $('bagHint').textContent = open ? 'اضغط حتى ترجعها للجنطة' : 'اضغط على الجنطة حتى تطلع آخر الرضعات';
   }
-  w.addEventListener('click', toggle);
-  w.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); } });
+  bag.addEventListener('click', toggle);
+  bag.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); } });
 })();
 
 /* ---------------- delete (tap twice) ---------------- */
+// الضغطة الأولى تجهّز الزر ("احذف؟")، الثانية ترجّع true
+function confirmTap(btn){
+  if (btn.classList.contains('armed')) return true;
+  document.querySelectorAll('.del-btn.armed').forEach(b => b.classList.remove('armed'));
+  btn.classList.add('armed');
+  clearTimeout(btn._t);
+  btn._t = setTimeout(() => btn.classList.remove('armed'), 3000);
+  return false;
+}
 $('historyList').addEventListener('click', async e => {
   const btn = e.target.closest('.del-btn');
   if (!btn){
@@ -991,17 +1428,11 @@ $('historyList').addEventListener('click', async e => {
     if (entry) openEdit(entry.dataset.id);
     return;
   }
-  if (!btn.classList.contains('armed')){
-    document.querySelectorAll('.del-btn.armed').forEach(b => b.classList.remove('armed'));
-    btn.classList.add('armed');
-    clearTimeout(btn._t);
-    btn._t = setTimeout(() => btn.classList.remove('armed'), 3000);
-    return;
-  }
+  if (!confirmTap(btn)) return;
   const id = btn.dataset.id;
   const removed = feeds.find(f => String(f.id) === String(id));
   try{
-    await store.remove(id);
+    await store.feeds.remove(id);
     feeds = feeds.filter(f => String(f.id) !== String(id));
     render();
     if (removed) showToast(removed, 'deleted');
@@ -1010,23 +1441,32 @@ $('historyList').addEventListener('click', async e => {
     alert('ما انحذفت. تأكد من الإنترنت وجرب مرة ثانية.');
   }
 });
-$('historyList').addEventListener('keydown', e => {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('entry')){
-    e.preventDefault();
-    openEdit(e.target.dataset.id);
-  }
-});
+function entryKeys(box, open){
+  box.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('entry')){
+      e.preventDefault();
+      open(e.target.dataset.id);
+    }
+  });
+}
+entryKeys($('historyList'), id => openEdit(id));
 
 /* ---------------- segmented controls ---------------- */
-function buildSeg(boxId, name, options, labelFn){
-  $(boxId).innerHTML = options.map(o => `
+function radiosHTML(name, options, labelFn, checked, nameClass){
+  return options.map(o => `
     <label class="radio">
-      <input type="radio" name="${name}" value="${esc(o)}">
-      <span class="name">${labelFn ? labelFn(o) : esc(o)}</span>
+      <input type="radio" name="${esc(name)}" value="${esc(o)}"${String(o) === String(checked) ? ' checked' : ''}>
+      <span class="name${nameClass ? ' ' + nameClass : ''}">${labelFn ? labelFn(o) : esc(o)}</span>
     </label>`).join('');
 }
-buildSeg('segAmount', 'amount', [...AMOUNTS.map(String), 'other'], o => o === 'other' ? 'غير' : o);
-buildSeg('segFormula', 'formula', FORMULAS);
+function buildSeg(boxId, name, options, labelFn, nameClass){
+  $(boxId).innerHTML = radiosHTML(name, options, labelFn, null, nameClass);
+}
+buildSeg('segType', 'ftype', Object.keys(FEED_TYPES), o => FEED_TYPES[o]);
+buildSeg('segAmount', 'amount', [...UNITS.map(String), 'other'],
+  o => o === 'other' ? '<b>غير</b><small>بالمل</small>' : `<b>${o}</b><small>${o * ML_PER_UNIT} مل</small>`, 'stack');
+buildSeg('segDuration', 'dur', [...DURATIONS.map(String), 'other'], o => o === 'other' ? 'غير' : o);
+buildSeg('segSide', 'side', Object.keys(SIDES), o => SIDES[o]);
 buildSeg('segBy', 'by', GIVERS);
 
 function setRadio(name, value){
@@ -1037,29 +1477,67 @@ function getRadio(name){
   const el = document.querySelector(`input[name="${name}"]:checked`);
   return el ? el.value : null;
 }
+function updateTypeFields(){
+  const breast = getRadio('ftype') === 'breast';
+  $('amountField').classList.toggle('hidden', breast);
+  $('breastFields').classList.toggle('hidden', !breast);
+  $('byField').classList.toggle('hidden', breast);
+}
+$('segType').addEventListener('change', updateTypeFields);
 $('segAmount').addEventListener('change', () => {
   const other = getRadio('amount') === 'other';
   $('customAmountRow').classList.toggle('hidden', !other);
   if (other) $('customAmount').focus();
 });
+$('segDuration').addEventListener('change', () => {
+  const other = getRadio('dur') === 'other';
+  $('customDurationRow').classList.toggle('hidden', !other);
+  if (other) $('customDuration').focus();
+});
 
-/* ---------------- sheet ---------------- */
+/* ---------------- sheets ---------------- */
+function showPanel(id){
+  $('backdrop').classList.add('show');
+  $(id).classList.add('show');
+}
+function closeSheet(){
+  $('backdrop').classList.remove('show');
+  document.querySelectorAll('.sheet.show').forEach(s => s.classList.remove('show'));
+}
+$('backdrop').addEventListener('click', closeSheet);
+document.querySelectorAll('.sheet-close').forEach(b => b.addEventListener('click', closeSheet));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+/* ---------------- feed sheet ---------------- */
 function loadPrefs(){ try{ return JSON.parse(safeGet('sama_prefs') || '{}'); }catch(e){ return {}; } }
 let editingId = null;   // null = رضعة جديدة، غير هيج = id الرضعة اللي نعدلها
 function clearRadios(){ document.querySelectorAll('#sheet input[type="radio"]').forEach(r => { r.checked = false; }); }
 function openSheet(feed){
   clearRadios();
-  $('customAmountRow').classList.add('hidden');
+  ['customAmountRow','customDurationRow'].forEach(id => $(id).classList.add('hidden'));
   $('customAmount').value = '';
+  $('customDuration').value = '';
+  const p = loadPrefs();
   if (feed){
     editingId = feed.id;
-    if (AMOUNTS.includes(Number(feed.amount_ml))) setRadio('amount', feed.amount_ml);
-    else {
-      setRadio('amount', 'other');
-      $('customAmountRow').classList.remove('hidden');
-      $('customAmount').value = feed.amount_ml;
+    setRadio('ftype', isBreast(feed) ? 'breast' : 'formula');
+    if (isBreast(feed)){
+      if (DURATIONS.includes(Number(feed.duration_min))) setRadio('dur', feed.duration_min);
+      else {
+        setRadio('dur', 'other');
+        $('customDurationRow').classList.remove('hidden');
+        $('customDuration').value = feed.duration_min;
+      }
+      if (feed.breast_side) setRadio('side', feed.breast_side);
+    } else {
+      const u = Number(feed.amount_ml) / ML_PER_UNIT;
+      if (UNITS.includes(u)) setRadio('amount', u);
+      else {
+        setRadio('amount', 'other');
+        $('customAmountRow').classList.remove('hidden');
+        $('customAmount').value = feed.amount_ml;
+      }
     }
-    if (feed.formula_no) setRadio('formula', feed.formula_no);
     if (feed.given_by) setRadio('by', feed.given_by);
     $('feedTime').value = toLocalInput(new Date(feed.fed_at));
     $('feedNote').value = feed.note || '';
@@ -1067,30 +1545,26 @@ function openSheet(feed){
     $('saveBtn').textContent = 'احفظ التعديل';
   } else {
     editingId = null;
-    const p = loadPrefs();
-    setRadio('amount', p.amount && AMOUNTS.includes(Number(p.amount)) ? p.amount : AMOUNTS[2]);
-    setRadio('formula', p.formula || FORMULAS[0]);
-    setRadio('by', p.by || GIVERS[0]);
+    setRadio('ftype', p.type === 'breast' ? 'breast' : 'formula');
     $('feedTime').value = toLocalInput(new Date());
     $('feedNote').value = '';
     $('sheetTitle').textContent = 'رضعة جديدة';
     $('saveBtn').textContent = 'سجّل الرضعة';
   }
+  // القيم الافتراضية للحقول اللي ما انختارت (حتى لو بدّلوا النوع)
+  const lastUnit = Number(p.unit) || Number(p.amount) / ML_PER_UNIT;   // p.amount من النسخة القديمة (بالمل)
+  if (!getRadio('amount')) setRadio('amount', UNITS.includes(lastUnit) ? lastUnit : 3);
+  if (!getRadio('dur')) setRadio('dur', DURATIONS.includes(Number(p.dur)) ? p.dur : 15);
+  if (!getRadio('side')) setRadio('side', SIDES[p.side] ? p.side : 'both');
+  if (!getRadio('by')) setRadio('by', GIVERS.includes(p.by) ? p.by : GIVERS[0]);
+  updateTypeFields();
   $('formError').textContent = '';
-  $('backdrop').classList.add('show');
-  $('sheet').classList.add('show');
-}
-function closeSheet(){
-  $('backdrop').classList.remove('show');
-  $('sheet').classList.remove('show');
+  showPanel('sheet');
 }
 function openEdit(id){
   const f = feeds.find(x => String(x.id) === String(id));
   if (f) openSheet(f);
 }
-$('backdrop').addEventListener('click', closeSheet);
-$('sheetClose').addEventListener('click', closeSheet);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 $('nowBtn').addEventListener('click', () => { $('feedTime').value = toLocalInput(new Date()); });
 
 $('newFeedBtn').addEventListener('click', () => {
@@ -1102,36 +1576,48 @@ $('newFeedBtn').addEventListener('click', () => {
 
 $('sheet').addEventListener('submit', async e => {
   e.preventDefault();
-  let amount = getRadio('amount');
-  if (amount === 'other') amount = $('customAmount').value;
-  amount = parseInt(amount, 10);
-  if (!amount || amount < 1 || amount > 1000){
-    $('formError').textContent = 'اكتب كمية صحيحة بالمل.';
-    return;
-  }
+  if (!currentId){ $('formError').textContent = 'ضيف الطفل أول.'; return; }
+  const type = getRadio('ftype') === 'breast' ? 'breast' : 'formula';
   const t = $('feedTime').value ? new Date($('feedTime').value) : new Date();
   const feed = {
+    child_id: currentId,
     fed_at: t.toISOString(),
-    amount_ml: amount,
-    formula_no: getRadio('formula'),
-    given_by: getRadio('by'),
+    feed_type: type,
     note: $('feedNote').value.trim() || null
   };
+  if (type === 'formula'){
+    const a = getRadio('amount');
+    const amount = a === 'other' ? parseInt($('customAmount').value, 10) : Number(a) * ML_PER_UNIT;
+    if (!amount || amount < 1 || amount > 1000){
+      $('formError').textContent = 'اختار الرقم أو اكتب كمية صحيحة بالمل.';
+      return;
+    }
+    Object.assign(feed, { amount_ml:amount, duration_min:null, breast_side:null, given_by:getRadio('by') });
+  } else {
+    const d = getRadio('dur');
+    const mins = d === 'other' ? parseInt($('customDuration').value, 10) : Number(d);
+    if (!mins || mins < 1 || mins > 300){
+      $('formError').textContent = 'اكتب مدة صحيحة بالدقايق.';
+      return;
+    }
+    Object.assign(feed, { amount_ml:null, duration_min:mins, breast_side:getRadio('side'), given_by:'ماما' });
+  }
   $('saveBtn').disabled = true;
   const editId = editingId;
   try{
     if (editId){
-      const row = await store.update(editId, feed);
-      feeds = feeds.map(f => String(f.id) === String(editId) ? row : f);
-      feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
+      const row = await store.feeds.update(editId, feed);
+      feeds = sortFeeds(feeds.map(f => String(f.id) === String(editId) ? row : f));
       render();
       closeSheet();
       showToast(row, 'edited');
     } else {
-      const row = await store.add(feed);
-      safeSet('sama_prefs', JSON.stringify({ amount:String(amount), formula:feed.formula_no, by:feed.given_by }));
+      const row = await store.feeds.add(feed);
+      safeSet('sama_prefs', JSON.stringify({
+        type, unit:getRadio('amount'), dur:getRadio('dur'), side:getRadio('side'), by:getRadio('by')
+      }));
       feeds.push(row);
-      feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
+      sortFeeds(feeds);
       render();
       closeSheet();
       showToast(row);
@@ -1148,17 +1634,24 @@ $('sheet').addEventListener('submit', async e => {
 
 /* ---------------- toast with undo ---------------- */
 let toastTimer = null, lastAddedId = null, lastDeleted = null;
-function showToast(row, kind){
-  // kind: فارغ = رضعة جديدة، 'edited' = تعديل (بدون تراجع)، 'deleted' = حذف (التراجع يرجّعها)
-  const edited = kind === 'edited', deleted = kind === 'deleted';
-  lastAddedId = (edited || deleted) ? null : row.id;
-  lastDeleted = deleted ? row : null;
-  $('toastTitle').textContent = edited ? 'انعدلت الرضعة' : deleted ? 'انحذفت الرضعة' : 'انسجلت الرضعة';
-  $('toastUndo').classList.toggle('hidden', edited);
-  $('toastSub').textContent = row.amount_ml + ' مل، حليب رقم ' + (row.formula_no || '-') + '، ' + fmtTime(new Date(row.fed_at));
+function showNote(title, sub, withUndo){
+  $('toastTitle').textContent = title;
+  $('toastSub').textContent = sub || '';
+  $('toastUndo').classList.toggle('hidden', !withUndo);
   $('toast').classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(hideToast, 5000);
+}
+function showToast(row, kind){
+  // kind: فارغ = رضعة جديدة، 'edited' = تعديل (بدون تراجع)، 'deleted' = حذف (التراجع يرجّعها)
+  const edited = kind === 'edited', deleted = kind === 'deleted';
+  showNote(
+    edited ? 'انعدلت الرضعة' : deleted ? 'انحذفت الرضعة' : 'انسجلت الرضعة',
+    feedText(row) + '، ' + fmtTime(new Date(row.fed_at)),
+    !edited
+  );
+  lastAddedId = (edited || deleted) ? null : row.id;
+  lastDeleted = deleted ? row : null;
 }
 function hideToast(){ $('toast').classList.remove('show'); lastAddedId = null; lastDeleted = null; }
 $('toastClose').addEventListener('click', hideToast);
@@ -1167,10 +1660,12 @@ $('toastUndo').addEventListener('click', async () => {
     const r = lastDeleted;
     hideToast();
     try{
-      const row = await store.add({ fed_at:r.fed_at, amount_ml:r.amount_ml, formula_no:r.formula_no, given_by:r.given_by, note:r.note });
-      feeds.push(row);
-      feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
-      render();
+      const row = await store.feeds.add({
+        child_id:r.child_id, fed_at:r.fed_at, feed_type:r.feed_type || 'formula',
+        amount_ml:r.amount_ml, duration_min:r.duration_min, breast_side:r.breast_side,
+        given_by:r.given_by, note:r.note
+      });
+      if (row.child_id === currentId){ feeds.push(row); sortFeeds(feeds); render(); }
     }catch(e){ alert('ما رجعت الرضعة. سجّلها من جديد.'); }
     return;
   }
@@ -1178,10 +1673,468 @@ $('toastUndo').addEventListener('click', async () => {
   const id = lastAddedId;
   hideToast();
   try{
-    await store.remove(id);
+    await store.feeds.remove(id);
     feeds = feeds.filter(f => String(f.id) !== String(id));
     render();
   }catch(e){ alert('ما انلغت. احذفها من السجل.'); }
+});
+
+/* ---------------- reports ---------------- */
+// نقاط الوزن (كغم) حسب العمر بالأيام، أولها وزن الولادة
+function weightPoints(c){
+  const birth = c && c.birth_at ? new Date(c.birth_at) : null;
+  const rows = growth.filter(r => r.weight_g);
+  const base = birth || (rows[0] ? parseDay(rows[0].measured_on) : null);
+  const pts = [];
+  if (birth && c.birth_weight_g) pts.push({ d:0, w:c.birth_weight_g/1000 });
+  rows.forEach(r => pts.push({ d:daysBetween(base, parseDay(r.measured_on)), w:r.weight_g/1000 }));
+  return pts.sort((a,b) => a.d - b.d);
+}
+
+function chartSVG(pts){
+  if (pts.length < 2) return '<div class="r-hint">الرسم يطلع من يصير عدكم وزنين أو أكثر.</div>';
+  const W = 340, H = 196, L = 34, R = 14, T = 16, B = 36;
+  const maxD = Math.max(7, pts[pts.length-1].d);
+  const ws = pts.map(p => p.w);
+  let lo = Math.min(...ws), hi = Math.max(...ws);
+  const pad = Math.max(0.2, (hi - lo) * 0.15);
+  lo = Math.max(0, lo - pad); hi = hi + pad;
+  const x = d => L + (d / maxD) * (W - L - R);
+  const y = w => T + (1 - (w - lo) / (hi - lo)) * (H - T - B);
+  let g = '';
+  for (let i = 0; i <= 3; i++){
+    const v = lo + (hi - lo) * i / 3, yy = y(v).toFixed(1);
+    g += `<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--line)" stroke-width="1"/>
+      <text x="${L-6}" y="${yy}" dy="4" text-anchor="end" font-size="10" fill="var(--muted)">${v.toFixed(1)}</text>`;
+  }
+  const weeks = maxD / 7, step = Math.max(1, Math.ceil(weeks / 6));
+  for (let wk = 0; wk * 7 <= maxD; wk += step){
+    g += `<text x="${x(wk*7).toFixed(1)}" y="${H-21}" text-anchor="middle" font-size="10" fill="var(--muted)">${wk}</text>`;
+  }
+  const line = pts.map(p => x(p.d).toFixed(1) + ',' + y(p.w).toFixed(1)).join(' ');
+  const last = pts[pts.length-1];
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="رسم الوزن حسب العمر">
+    ${g}
+    <text x="${L}" y="10" font-size="10" fill="var(--muted)">كغم</text>
+    <text x="${(L + W - R) / 2}" y="${H-3}" text-anchor="middle" font-size="10" fill="var(--muted)">العمر بالأسابيع</text>
+    <polyline points="${line}" fill="none" stroke="var(--peach-deep)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map(p => `<circle cx="${x(p.d).toFixed(1)}" cy="${y(p.w).toFixed(1)}" r="4" fill="var(--peach-deep)"/>`).join('')}
+    <text x="${x(last.d).toFixed(1)}" y="${(y(last.w) - 10).toFixed(1)}" text-anchor="end" font-size="12" font-weight="700" fill="var(--text)">${last.w.toFixed(2)}</text>
+  </svg>`;
+}
+
+// الوزن من الأقدم للأحدث مع الفرق عن اللي قبله
+function growthTimeline(c){
+  const rows = [];
+  if (c && c.birth_at && (c.birth_weight_g || c.birth_length_cm || c.birth_head_cm)) rows.push({
+    birth:true, date:new Date(c.birth_at), weight_g:c.birth_weight_g, length_cm:c.birth_length_cm, head_cm:c.birth_head_cm
+  });
+  growth.forEach(r => rows.push({ ...r, date:parseDay(r.measured_on) }));
+  rows.sort((a,b) => a.date - b.date);
+  let prev = null;
+  rows.forEach(r => {
+    r.diff = (r.weight_g && prev) ? r.weight_g - prev : null;
+    if (r.weight_g) prev = r.weight_g;
+  });
+  return rows;
+}
+
+function dailyTotals(days){
+  const from = startOfToday(); from.setDate(from.getDate() - (days - 1));
+  const map = {}, out = [];
+  feeds.filter(f => new Date(f.fed_at) >= from).forEach(f => {
+    const d = new Date(f.fed_at), k = dayKey(d);
+    if (!map[k]){ map[k] = { date:d, items:[] }; out.push(map[k]); }
+    map[k].items.push(f);
+  });
+  return out.map(g => ({ date:g.date, ...sumFeeds(g.items) }));
+}
+function averages(days){
+  const rows = dailyTotals(days), n = rows.length || 1;
+  const t = rows.reduce((s,r) => ({ n:s.n+r.n, ml:s.ml+r.ml, mins:s.mins+r.mins }), { n:0, ml:0, mins:0 });
+  return { rows, ml:Math.round(t.ml/n), feeds:(t.n/n).toFixed(1).replace(/\.0$/,''), mins:Math.round(t.mins/n) };
+}
+
+function renderReports(){
+  const c = current();
+  if (!c){ $('kidCard').innerHTML = ''; return; }
+  const birth = c.birth_at ? new Date(c.birth_at) : null;
+  const tl = growthTimeline(c);
+  const lastW = [...tl].reverse().find(r => r.weight_g && !r.birth);
+  const lastL = [...tl].reverse().find(r => r.length_cm);
+  $('kidCard').innerHTML = `
+    <div class="k-name">${esc(c.name)}</div>
+    <div class="k-age">${birth ? 'عمر' + her(c) + ' ' + ageText(birth) : 'تاريخ الولادة مو مسجّل'}</div>
+    ${birth ? `<div class="k-born">${isGirl(c) ? 'انولدت' : 'انولد'} ${fmtDateTime(birth)}</div>` : ''}
+    <dl>
+      <div><dt>وزن الولادة</dt><dd>${c.birth_weight_g ? kg(c.birth_weight_g) : '—'}</dd></div>
+      <div><dt>آخر وزن</dt><dd>${lastW ? kg(lastW.weight_g) : '—'}</dd></div>
+      <div><dt>الطول</dt><dd>${lastL ? esc(lastL.length_cm) + ' سم' : '—'}</dd></div>
+    </dl>
+    <button class="ghost-btn" type="button" id="editKidBtn">عدّل معلومات الولادة</button>`;
+
+  // تنبيه الوزن الأسبوعي + معدل الزيادة
+  const hint = $('growthHint');
+  const lastM = growth[growth.length-1];
+  const pts = weightPoints(c);
+  let txt = '', due = false;
+  if (!lastM) { txt = 'ما كو قياسات بعد. وزّنو' + her(c) + ' كل أسبوع وسجّلوا الوزن هنا.'; due = true; }
+  else {
+    const ago = daysBetween(parseDay(lastM.measured_on), new Date());
+    txt = ago === 0 ? 'آخر قياس اليوم' : 'آخر قياس قبل ' + countWord(ago,'يوم','يومين','أيام');
+    if (ago >= 7){ txt += '، صار أسبوع، وقت الوزن'; due = true; }
+  }
+  if (pts.length >= 2){
+    const a = pts[0], b = pts[pts.length-1];
+    if (b.d > a.d) txt += ' · معدل الزيادة ' + Math.round((b.w - a.w) * 1000 / ((b.d - a.d) / 7)) + ' غرام بالأسبوع';
+  }
+  hint.textContent = txt;
+  hint.classList.toggle('due', due);
+  $('growthChart').innerHTML = chartSVG(pts);
+
+  const list = tl.slice().reverse();
+  $('growthList').innerHTML = list.map(r => {
+    const meta = [
+      birth && !r.birth ? 'عمر' + her(c) + ' ' + ageText(birth, r.date) : '',
+      r.length_cm ? 'طول ' + esc(r.length_cm) + ' سم' : '',
+      r.head_cm ? 'راس ' + esc(r.head_cm) + ' سم' : ''
+    ].filter(Boolean).join('، ');
+    const diff = r.diff != null ? `<span class="g-diff${r.diff < 0 ? ' down' : ''}">${gramsDiff(r.diff)}</span>` : '';
+    const body = `<div class="entry-time">${r.birth ? 'الولادة' : r.date.toLocaleDateString(LOCALE,{day:'numeric',month:'short'})}</div>
+      <div>
+        <div class="entry-amt">${r.weight_g ? (r.weight_g/1000).toFixed(2) + '<small>كغم</small>' : '—'} ${diff}</div>
+        ${meta ? `<div class="entry-meta">${meta}</div>` : ''}
+        ${r.note ? `<div class="entry-note">${esc(r.note)}</div>` : ''}
+      </div>`;
+    if (r.birth) return `<div class="entry" style="cursor:default">${body}<span></span></div>`;
+    return `<div class="entry" data-id="${esc(r.id)}" role="button" tabindex="0" aria-label="عدّل قياس ${fmtDate(r.date)}">${body}
+      <button class="del-btn" type="button" data-id="${esc(r.id)}" aria-label="احذف هذا القياس">${TRASH_SVG}</button></div>`;
+  }).join('');
+
+  const av = averages(7);
+  $('feedStats').innerHTML = `
+    <div class="stat"><b>${av.ml}</b><span>مل باليوم</span></div>
+    <div class="stat"><b>${av.feeds}</b><span>رضعة باليوم</span></div>
+    <div class="stat"><b>${av.mins}</b><span>دقيقة طبيعي باليوم</span></div>`;
+}
+
+$('kidCard').addEventListener('click', e => { if (e.target.closest('#editKidBtn')) showSetup('edit'); });
+
+/* ---------------- growth sheet ---------------- */
+let editingGrowthId = null;
+function openGrowth(row){
+  editingGrowthId = row ? row.id : null;
+  $('gDate').value = row ? row.measured_on : toLocalDate(new Date());
+  $('gDate').max = toLocalDate(new Date());
+  $('gWeight').value = row && row.weight_g ? (row.weight_g / 1000) : '';
+  $('gLength').value = row && row.length_cm != null ? row.length_cm : '';
+  $('gHead').value = row && row.head_cm != null ? row.head_cm : '';
+  $('gNote').value = row ? (row.note || '') : '';
+  $('growthTitle').textContent = row ? 'تعديل القياس' : 'قياس جديد';
+  $('gSave').textContent = row ? 'احفظ التعديل' : 'احفظ القياس';
+  $('gError').textContent = '';
+  showPanel('growthSheet');
+}
+$('addGrowthBtn').addEventListener('click', () => openGrowth());
+$('growthList').addEventListener('click', async e => {
+  const btn = e.target.closest('.del-btn');
+  if (!btn){
+    const entry = e.target.closest('.entry[data-id]');
+    if (entry) openGrowth(growth.find(r => String(r.id) === entry.dataset.id));
+    return;
+  }
+  if (!confirmTap(btn)) return;
+  try{
+    await store.growth.remove(btn.dataset.id);
+    growth = growth.filter(r => String(r.id) !== btn.dataset.id);
+    render();
+    showNote('انحذف القياس');
+  }catch(err){
+    btn.classList.remove('armed');
+    alert('ما انحذف. تأكد من الإنترنت وجرب مرة ثانية.');
+  }
+});
+entryKeys($('growthList'), id => openGrowth(growth.find(r => String(r.id) === id)));
+
+$('growthSheet').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = m => { $('gError').textContent = m; };
+  const w = num($('gWeight').value), l = num($('gLength').value), h = num($('gHead').value);
+  if (!$('gDate').value) return err('اختار التاريخ.');
+  if (w == null && l == null && h == null) return err('اكتب الوزن أو الطول أو محيط الراس.');
+  if (w != null && !(w >= 0.3 && w <= 40)) return err('اكتب الوزن بالكيلو، مثلاً 3.85');
+  if (l != null && !(l >= 20 && l <= 150)) return err('الطول لازم بين 20 و 150 سم.');
+  if (h != null && !(h >= 15 && h <= 60)) return err('محيط الراس لازم بين 15 و 60 سم.');
+  const row = {
+    child_id: currentId,
+    measured_on: $('gDate').value,
+    weight_g: w == null ? null : Math.round(w * 1000),
+    length_cm: l, head_cm: h,
+    note: $('gNote').value.trim() || null
+  };
+  $('gSave').disabled = true;
+  try{
+    if (editingGrowthId){
+      const saved = await store.growth.update(editingGrowthId, row);
+      growth = sortGrowth(growth.map(r => String(r.id) === String(editingGrowthId) ? saved : r));
+    } else {
+      growth.push(await store.growth.add(row));
+      sortGrowth(growth);
+    }
+    render();
+    closeSheet();
+    showNote(editingGrowthId ? 'انعدل القياس' : 'انسجل القياس', w != null ? 'الوزن ' + kg(row.weight_g) : '');
+  }catch(e2){
+    console.error(e2);
+    err('ما انحفظ. تأكد من الإنترنت وجرب مرة ثانية.');
+  }finally{
+    $('gSave').disabled = false;
+  }
+});
+
+/* ---------------- PDF report (print) ---------------- */
+function buildReport(){
+  const c = current();
+  const birth = c.birth_at ? new Date(c.birth_at) : null;
+  const info = [
+    ['الاسم', esc(c.name)],
+    ['الجنس', SEXES[c.sex] || ''],
+    ['تاريخ ووقت الولادة', birth ? fmtDateTime(birth) : ''],
+    ['العمر اليوم', birth ? ageText(birth) : ''],
+    ['وزن الولادة', c.birth_weight_g ? kg(c.birth_weight_g) : ''],
+    ['الطول عند الولادة', c.birth_length_cm ? esc(c.birth_length_cm) + ' سم' : ''],
+    ['محيط الراس عند الولادة', c.birth_head_cm ? esc(c.birth_head_cm) + ' سم' : ''],
+    ['نوع الولادة', DELIVERY[c.delivery_type] || ''],
+    ['عمر الحمل', c.gestation_weeks ? esc(c.gestation_weeks) + ' أسبوع' : ''],
+    ['المستشفى', esc(c.hospital || '')],
+    ['فصيلة الدم', esc(c.blood_type || '')],
+    ['ملاحظات', esc(c.notes || '')]
+  ].filter(r => r[1]);
+  const tl = growthTimeline(c);
+  const av = averages(30);
+  return `
+    <h1>تقرير ${esc(c.name)}</h1>
+    <div class="pr-sub">طلع بتاريخ ${fmtDateTime(new Date())}</div>
+
+    <h2>معلومات الولادة</h2>
+    <table>${info.map(r => `<tr><th style="width:38%">${r[0]}</th><td>${r[1]}</td></tr>`).join('')}</table>
+
+    <h2>النمو (الوزن والطول ومحيط الراس)</h2>
+    ${tl.length ? `<table>
+      <tr><th>التاريخ</th><th>العمر</th><th>الوزن</th><th>الفرق</th><th>الطول</th><th>محيط الراس</th><th>ملاحظة</th></tr>
+      ${tl.map(r => `<tr>
+        <td>${r.birth ? 'الولادة' : fmtDate(r.date)}</td>
+        <td>${birth && !r.birth ? ageText(birth, r.date) : ''}</td>
+        <td>${r.weight_g ? kg(r.weight_g) : ''}</td>
+        <td>${r.diff != null ? gramsDiff(r.diff) : ''}</td>
+        <td>${r.length_cm ? esc(r.length_cm) + ' سم' : ''}</td>
+        <td>${r.head_cm ? esc(r.head_cm) + ' سم' : ''}</td>
+        <td>${esc(r.note || '')}</td></tr>`).join('')}
+    </table>` : '<p>ما كو قياسات مسجلة.</p>'}
+    <div class="chart">${chartSVG(weightPoints(c))}</div>
+
+    <h2>الرضعات (آخر 30 يوم)</h2>
+    ${av.rows.length ? `
+    <p>المعدل باليوم: ${av.ml} مل صناعي، عدد الرضعات ${av.feeds}${av.mins ? '، ' + av.mins + ' دقيقة طبيعي' : ''}.</p>
+    <table>
+      <tr><th>اليوم</th><th>عدد الرضعات</th><th>صناعي (مل)</th><th>طبيعي (دقيقة)</th></tr>
+      ${av.rows.map(r => `<tr><td>${r.date.toLocaleDateString(LOCALE,{weekday:'short',day:'numeric',month:'short'})}</td>
+        <td>${r.n}</td><td>${r.ml}</td><td>${r.mins || ''}</td></tr>`).join('')}
+    </table>` : '<p>ما كو رضعات مسجلة بآخر 30 يوم.</p>'}
+    <div class="pr-foot">من تطبيق رضعات. القياسات مسجلة من الأهل.</div>`;
+}
+let titleBeforePrint = null;
+$('pdfBtn').addEventListener('click', () => {
+  const c = current();
+  if (!c) return;
+  $('printReport').innerHTML = buildReport();
+  titleBeforePrint = document.title;
+  document.title = 'تقرير ' + c.name + ' ' + toLocalDate(new Date());   // اسم ملف الـ PDF
+  window.print();
+});
+window.addEventListener('afterprint', () => {
+  if (titleBeforePrint){ document.title = titleBeforePrint; titleBeforePrint = null; }
+});
+
+/* ---------------- setup (first run / add child / edit) ---------------- */
+let setupMode = 'first';     // 'first' | 'add' | 'edit'
+let setupDraft = [];          // [{name, sex, ...birth}]
+let rowSeq = 0;
+const field = (label, inner, id) => `<div><label class="field-label" for="${id}">${label}</label>${inner}</div>`;
+
+function sexSeg(k){
+  return `<div class="seg">${radiosHTML('sex_' + (++rowSeq), Object.keys(SEXES), o => SEXES[o], k && k.sex)}</div>`;
+}
+function kidRowHTML(k){
+  return `<div class="kid-row">
+    <div class="kid-row-head">
+      <input class="text-input" data-f="name" maxlength="40" placeholder="اسم الطفل" aria-label="اسم الطفل" value="${esc(k ? k.name : '')}">
+      <button type="button" class="del-btn kid-remove" aria-label="شيل هذا الطفل">${TRASH_SVG}</button>
+    </div>
+    ${sexSeg(k)}
+  </div>`;
+}
+function birthCardHTML(k, withName){
+  const i = ++rowSeq;
+  const v = x => x == null ? '' : esc(x);
+  const n = (f, val, attrs) => `<input class="text-input" type="number" inputmode="decimal" dir="ltr" id="b_${f}_${i}" data-f="${f}" value="${v(val)}" ${attrs}>`;
+  return `<div class="birth-card">
+    ${withName
+      ? `${field('الاسم', `<input class="text-input" id="b_name_${i}" data-f="name" maxlength="40" value="${v(k.name)}">`, 'b_name_' + i)}${sexSeg(k)}`
+      : `<h3>${esc(k.name)}</h3>`}
+    ${field('تاريخ ووقت الولادة', `<input class="text-input" type="datetime-local" id="b_at_${i}" data-f="birth_at" value="${k.birth_at ? toLocalInput(new Date(k.birth_at)) : ''}">`, 'b_at_' + i)}
+    <div class="two">
+      ${field('الوزن (كغم)', n('birth_weight', k.birth_weight_g ? k.birth_weight_g / 1000 : null, 'step="0.01" placeholder="3.20"'), 'b_birth_weight_' + i)}
+      ${field('الطول (سم)', n('birth_length_cm', k.birth_length_cm, 'step="0.1" placeholder="50"'), 'b_birth_length_cm_' + i)}
+    </div>
+    <div class="two">
+      ${field('محيط الراس (سم)', n('birth_head_cm', k.birth_head_cm, 'step="0.1" placeholder="35"'), 'b_birth_head_cm_' + i)}
+      ${field('عمر الحمل (أسبوع)', n('gestation_weeks', k.gestation_weeks, 'step="1" inputmode="numeric" placeholder="38"'), 'b_gestation_weeks_' + i)}
+    </div>
+    <div>
+      <span class="field-label">نوع الولادة</span>
+      <div class="seg">${radiosHTML('del_' + i, Object.keys(DELIVERY), o => DELIVERY[o], k.delivery_type)}</div>
+    </div>
+    <div class="two">
+      ${field('فصيلة الدم', `<select class="text-input" id="b_blood_${i}" data-f="blood_type">
+        <option value="">ما ندري</option>
+        ${BLOOD_TYPES.map(b => `<option${b === k.blood_type ? ' selected' : ''}>${b}</option>`).join('')}
+      </select>`, 'b_blood_' + i)}
+      ${field('المستشفى', `<input class="text-input" id="b_hosp_${i}" data-f="hospital" maxlength="80" value="${v(k.hospital)}">`, 'b_hosp_' + i)}
+    </div>
+    ${field('ملاحظات', `<input class="text-input" id="b_notes_${i}" data-f="notes" maxlength="300" placeholder="مثلاً: دخلت الحاضنة يومين" value="${v(k.notes)}">`, 'b_notes_' + i)}
+  </div>`;
+}
+
+function showSetup(mode){
+  setupMode = mode;
+  closeSheet();
+  document.querySelectorAll('.setup-cancel').forEach(b => b.classList.toggle('hidden', mode === 'first'));
+  $('namesError').textContent = '';
+  $('birthError').textContent = '';
+  if (mode === 'edit'){
+    setupDraft = [{ ...current() }];
+    showBirthStep();
+  } else {
+    setupDraft = [];
+    $('namesTitle').textContent = mode === 'add' ? 'طفل جديد' : 'أهلاً بيكم';
+    $('kidRows').innerHTML = kidRowHTML();
+    $('addKidRow').textContent = mode === 'add' ? '+ ضيف طفل ثاني' : '+ ضيف طفل ثاني (توأم أو أخو)';
+    $('setupNames').classList.remove('hidden');
+    $('setupBirth').classList.add('hidden');
+  }
+  ['loginView','appView','errorView'].forEach(v => $(v).classList.add('hidden'));
+  $('setupView').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+function showBirthStep(){
+  const edit = setupMode === 'edit';
+  $('birthTitle').textContent = edit ? 'معلومات ' + setupDraft[0].name : 'معلومات الولادة';
+  $('birthSteps').classList.toggle('hidden', edit);
+  $('setupBack').classList.toggle('hidden', edit);
+  $('setupSave').textContent = edit ? 'احفظ' : 'احفظ وابدأ';
+  $('birthCards').innerHTML = setupDraft.map(k => birthCardHTML(k, edit)).join('');
+  $('setupNames').classList.add('hidden');
+  $('setupBirth').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+function readBirthCards(){
+  return [...document.querySelectorAll('#birthCards .birth-card')].map((card, i) => {
+    const v = f => { const el = card.querySelector(`[data-f="${f}"]`); return el ? el.value.trim() : ''; };
+    const checked = p => { const el = card.querySelector(`input[name^="${p}"]:checked`); return el ? el.value : null; };
+    const k = { ...setupDraft[i] };
+    if (card.querySelector('[data-f="name"]')){ k.name = v('name'); k.sex = checked('sex_') || k.sex; }
+    k.birth_at = v('birth_at') ? new Date(v('birth_at')).toISOString() : null;
+    const w = num(v('birth_weight'));
+    k.birth_weight_g = w == null ? null : Math.round(w * 1000);
+    k.birth_length_cm = num(v('birth_length_cm'));
+    k.birth_head_cm = num(v('birth_head_cm'));
+    k.gestation_weeks = num(v('gestation_weeks'));
+    k.delivery_type = checked('del_');
+    k.blood_type = v('blood_type') || null;
+    k.hospital = v('hospital') || null;
+    k.notes = v('notes') || null;
+    return k;
+  });
+}
+function birthProblem(k){
+  const who = k.name ? ' (' + k.name + ')' : '';
+  const out = (x, a, b) => x != null && !(x >= a && x <= b);
+  if (!k.name) return 'اكتب الاسم.';
+  if (!k.birth_at) return 'اكتب تاريخ ووقت الولادة' + who + '.';
+  if (new Date(k.birth_at) > new Date()) return 'تاريخ الولادة بالمستقبل' + who + '.';
+  if (out(k.birth_weight_g, 300, 8000)) return 'اكتب وزن الولادة بالكيلو، مثلاً 3.20' + who + '.';
+  if (out(k.birth_length_cm, 20, 70)) return 'الطول لازم بين 20 و 70 سم' + who + '.';
+  if (out(k.birth_head_cm, 15, 50)) return 'محيط الراس لازم بين 15 و 50 سم' + who + '.';
+  if (out(k.gestation_weeks, 20, 45) || (k.gestation_weeks != null && !Number.isInteger(k.gestation_weeks))) return 'عمر الحمل لازم رقم بين 20 و 45 أسبوع' + who + '.';
+  return '';
+}
+
+$('addKidRow').addEventListener('click', () => {
+  $('kidRows').insertAdjacentHTML('beforeend', kidRowHTML());
+  $('kidRows').lastElementChild.querySelector('input').focus();
+});
+$('kidRows').addEventListener('click', e => {
+  const b = e.target.closest('.kid-remove');
+  if (b && $('kidRows').children.length > 1) b.closest('.kid-row').remove();
+});
+$('setupNames').addEventListener('submit', e => {
+  e.preventDefault();
+  const kids = [...document.querySelectorAll('#kidRows .kid-row')].map(r => {
+    const s = r.querySelector('input[type="radio"]:checked');
+    return { name: r.querySelector('[data-f="name"]').value.trim(), sex: s ? s.value : null };
+  });
+  if (kids.some(k => !k.name)){ $('namesError').textContent = 'اكتب اسم كل طفل.'; return; }
+  if (kids.some(k => !k.sex)){ $('namesError').textContent = 'حدد بنت لو ولد لكل طفل.'; return; }
+  $('namesError').textContent = '';
+  // نخلي معلومات الولادة اللي انكتبت إذا رجعوا وغيّروا الاسم
+  setupDraft = kids.map((k, i) => ({ ...(setupDraft[i] || {}), ...k }));
+  showBirthStep();
+});
+$('setupBack').addEventListener('click', () => {
+  setupDraft = readBirthCards();
+  $('kidRows').innerHTML = setupDraft.map(kidRowHTML).join('');
+  $('setupBirth').classList.add('hidden');
+  $('setupNames').classList.remove('hidden');
+});
+document.querySelectorAll('.setup-cancel').forEach(b => b.addEventListener('click', () => {
+  showApp(); render();
+}));
+$('setupBirth').addEventListener('submit', async e => {
+  e.preventDefault();
+  const kids = readBirthCards();
+  const problem = kids.map(birthProblem).find(Boolean);
+  if (problem){ $('birthError').textContent = problem; return; }
+  $('birthError').textContent = '';
+  $('setupSave').disabled = true;
+  const pick = k => Object.fromEntries(CHILD_FIELDS.map(f => [f, k[f] ?? null]));
+  try{
+    if (setupMode === 'edit'){
+      const row = await store.children.update(kids[0].id, pick(kids[0]));
+      children = children.map(c => c.id === row.id ? row : c);
+    } else {
+      for (let i = 0; i < kids.length; i++){
+        if (kids[i].id) continue;   // انحفظ بمحاولة سابقة
+        const row = await store.children.add(pick(kids[i]));
+        kids[i].id = setupDraft[i].id = row.id;
+      }
+      if (setupMode === 'first') await store.feeds.adopt(kids[0].id);
+      await loadChildren();
+      currentId = kids[0].id;
+      safeSet('sama_child', currentId);
+      feeds = []; growth = [];
+    }
+    const wasEdit = setupMode === 'edit';
+    showApp();
+    setPage(wasEdit ? 'reports' : 'feeds');
+    render();
+    reload();
+  }catch(err){
+    console.error(err);
+    $('birthError').textContent = 'ما انحفظ. تأكد من الإنترنت وجرب مرة ثانية.';
+  }finally{
+    $('setupSave').disabled = false;
+  }
 });
 
 /* ---------------- back to top ---------------- */
@@ -1198,21 +2151,22 @@ window.addEventListener('online', () => reload());
 $('netRetry').addEventListener('click', () => reload());
 
 /* ---------------- boot ---------------- */
-function showApp(){
-  $('loginView').classList.add('hidden');
-  $('appView').classList.remove('hidden');
+function showOnly(id){
+  ['loginView','appView','setupView','errorView'].forEach(v => $(v).classList.toggle('hidden', v !== id));
 }
-function showLogin(){
-  $('appView').classList.add('hidden');
-  $('loginView').classList.remove('hidden');
-}
+function showApp(){ showOnly('appView'); }
+function showLogin(){ showOnly('loginView'); }
 let channel = null;
 function subscribe(){
   if (channel) return;
-  channel = sb.channel('feeds-changes')
-    .on('postgres_changes', { event:'*', schema:'public', table:'feeds' }, () => reload())
-    .subscribe();
+  const on = (ch, table, fn) => ch.on('postgres_changes', { event:'*', schema:'public', table }, fn);
+  channel = sb.channel('db-changes');
+  on(channel, 'feeds', () => reload());
+  on(channel, 'growth', () => reload());
+  on(channel, 'children', () => refreshChildren());
+  channel.subscribe();
 }
+function resetState(){ feeds = []; children = []; growth = []; currentId = null; }
 
 $('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
@@ -1224,12 +2178,12 @@ $('loginForm').addEventListener('submit', async e => {
   });
   $('loginBtn').disabled = false;
   if (error){ $('loginError').textContent = 'الإيميل أو الرمز غلط.'; return; }
-  showApp(); subscribe(); reload();
+  subscribe(); start();
 });
 $('logoutBtn').addEventListener('click', async () => {
   await sb.auth.signOut();
   if (channel){ sb.removeChannel(channel); channel = null; }
-  feeds = []; showLogin();
+  resetState(); showLogin();
 });
 
 $('reloadPageBtn').addEventListener('click', () => location.reload());
@@ -1241,18 +2195,18 @@ $('reloadPageBtn').addEventListener('click', () => location.reload());
   }
   if (!useSupabase){
     $('modeBanner').classList.remove('hidden');
-    showApp(); reload();
+    start();
     return;
   }
   $('logoutBtn').classList.remove('hidden');
   const { data } = await sb.auth.getSession();
-  if (data.session){ showApp(); subscribe(); reload(); }
+  if (data.session){ subscribe(); start(); }
   else showLogin();
   // إذا انتهت الجلسة، رجّع لشاشة الدخول بدل سجل قديم
   sb.auth.onAuthStateChange(event => {
     if (event === 'SIGNED_OUT'){
       if (channel){ sb.removeChannel(channel); channel = null; }
-      feeds = []; closeSheet(); showLogin();
+      resetState(); closeSheet(); showLogin();
     }
   });
 })();
