@@ -318,6 +318,14 @@ button,input{font-family:inherit;color:inherit}
 /* ================= CHILD SWITCHER + TABS ================= */
 .kids{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 2px;scrollbar-width:none}
 .kids::-webkit-scrollbar{display:none}
+.top-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.icon-btn{
+  width:44px;height:44px;border-radius:50%;border:none;flex-shrink:0;
+  background:var(--seg-bg);color:var(--text);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.icon-btn svg{width:20px;height:20px}
+.field-hint{color:var(--muted);font-size:13px;margin-top:8px}
 .kid-chip{
   flex-shrink:0;min-height:44px;padding:0 16px;border-radius:22px;
   border:1.5px solid var(--line);background:var(--surface);
@@ -775,6 +783,10 @@ select.text-input{appearance:auto}
       <div class="title" id="appTitle">رضعات</div>
       <div class="today-date" id="todayDate"></div>
     </div>
+    <div class="top-actions">
+    <button class="icon-btn" type="button" id="settingsBtn" aria-label="الإعدادات">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
     <label class="theme-switch" aria-label="الوضع الليلي">
       <input type="checkbox" class="theme-switch__checkbox" id="themeToggle">
       <div class="theme-switch__container">
@@ -793,6 +805,7 @@ select.text-input{appearance:auto}
         </div>
       </div>
     </label>
+    </div>
   </header>
 
   <div class="kids" id="kidsBar" aria-label="الأطفال"></div>
@@ -903,7 +916,7 @@ select.text-input{appearance:auto}
   </div>
 
   <div class="field" id="amountField">
-    <span class="field-label">الكمية (الرقم على الممية)</span>
+    <span class="field-label" id="amountLabel">الكمية (الرقم على الممية)</span>
     <div class="seg" id="segAmount"></div>
     <div class="field-row hidden" id="customAmountRow" style="margin-top:10px">
       <input class="text-input" type="number" inputmode="numeric" min="1" max="1000" id="customAmount" placeholder="اكتب الكمية بالمل">
@@ -944,6 +957,22 @@ select.text-input{appearance:auto}
 
   <button class="save-btn" type="submit" id="saveBtn">سجّل الرضعة</button>
   <div class="form-error" id="formError"></div>
+</form>
+
+<!-- Settings sheet -->
+<form class="sheet" id="settingsSheet" aria-label="الإعدادات">
+  <div class="grabber"></div>
+  <div class="sheet-head">
+    <h3>الإعدادات</h3>
+    <button class="sheet-close" type="button" aria-label="سد">
+      <svg viewBox="0 0 15 15" fill="none" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z"/></svg>
+    </button>
+  </div>
+  <div class="field">
+    <span class="field-label">الكمية تنكتب وتنعرض</span>
+    <div class="seg" id="segUnitMode"></div>
+    <div class="field-hint">الرقم هو المكتوب على الممية (1 = 30 مل). الإعداد ينحفظ على هذا الجهاز. تقرير الـ PDF يبقى بالمل حتى يفهمه الدكتور.</div>
+  </div>
 </form>
 
 <!-- Growth sheet -->
@@ -1088,6 +1117,12 @@ function num(v){ return (v === '' || v == null) ? null : Number(v); }
 function kg(g){ return (g/1000).toFixed(2) + ' كغم'; }
 function gramsDiff(g){ return (g > 0 ? '+' : '') + g + ' غرام'; }
 const isBreast = f => f.feed_type === 'breast';
+
+// الكمية تنعرض بطريقة وحدة بس، حسب الإعدادات بهذا الجهاز: 'number' (الرقم على الممية) أو 'ml'
+let amountMode = safeGet('sama_unit') === 'ml' ? 'ml' : 'number';
+function amountVal(ml){ return amountMode === 'ml' ? ml : Math.round(ml / ML_PER_UNIT * 10) / 10; }
+function amountUnit(){ return amountMode === 'ml' ? 'مل' : 'رقم'; }
+function amountStr(ml){ return amountVal(ml) + ' ' + amountUnit(); }
 const isGirl = c => !c || c.sex !== 'boy';
 const her = c => isGirl(c) ? 'ها' : 'ه';
 
@@ -1259,16 +1294,14 @@ function feedParts(f){
     main: f.duration_min, unit:'دقيقة', lbl:'المدة',
     meta: ['طبيعي', SIDES[f.breast_side]].filter(Boolean)
   };
-  const ml = Number(f.amount_ml) || 0, u = ml / ML_PER_UNIT;
   return {
-    main: ml, unit:'مل', lbl:'الكمية',
-    meta: [Number.isInteger(u) ? 'الرقم ' + u : '', esc(f.given_by || '')].filter(Boolean)
+    main: amountVal(Number(f.amount_ml) || 0), unit:amountUnit(), lbl:'الكمية',
+    meta: [esc(f.given_by || '')].filter(Boolean)
   };
 }
 function feedText(f){
   if (isBreast(f)) return 'طبيعي ' + f.duration_min + ' دقيقة';
-  const ml = Number(f.amount_ml) || 0, u = ml / ML_PER_UNIT;
-  return ml + ' مل' + (Number.isInteger(u) ? ' (الرقم ' + u + ')' : '');
+  return amountStr(Number(f.amount_ml) || 0);
 }
 function sumFeeds(list){
   return list.reduce((s,f) => {
@@ -1310,7 +1343,7 @@ function renderKids(){
 function renderSummary(){
   const today = startOfToday();
   const s = sumFeeds(feeds.filter(f => new Date(f.fed_at) >= today));
-  $('sumTotal').innerHTML = s.ml + ' <small>مل</small>';
+  $('sumTotal').innerHTML = amountVal(s.ml) + ' <small>' + amountUnit() + '</small>';
   $('sumSub').textContent = s.n
     ? 'مجموع اليوم، ' + s.n + feedsWord(s.n) + (s.mins ? '، ' + s.mins + ' دقيقة طبيعي' : '')
     : 'مجموع اليوم';
@@ -1346,7 +1379,7 @@ function renderHistory(){
     const s = sumFeeds(g.items);
     return `<div class="day">
       <div class="day-head"><span class="day-name">${dayLabel(g.date)}</span>
-        <span class="day-sum">${s.ml} مل${s.mins ? '، ' + s.mins + ' دقيقة طبيعي' : ''}، ${s.n}${feedsWord(s.n)}</span></div>
+        <span class="day-sum">${amountStr(s.ml)}${s.mins ? '، ' + s.mins + ' دقيقة طبيعي' : ''}، ${s.n}${feedsWord(s.n)}</span></div>
       ${g.items.map(f => {
         const p = feedParts(f);
         return `<div class="entry" data-id="${esc(f.id)}" role="button" tabindex="0" aria-label="عدّل رضعة ${esc(feedText(f))}، ${fmtTime(new Date(f.fed_at))}">
@@ -1463,11 +1496,21 @@ function buildSeg(boxId, name, options, labelFn, nameClass){
   $(boxId).innerHTML = radiosHTML(name, options, labelFn, null, nameClass);
 }
 buildSeg('segType', 'ftype', Object.keys(FEED_TYPES), o => FEED_TYPES[o]);
-buildSeg('segAmount', 'amount', [...UNITS.map(String), 'other'],
-  o => o === 'other' ? '<b>غير</b><small>بالمل</small>' : `<b>${o}</b><small>${o * ML_PER_UNIT} مل</small>`, 'stack');
+function buildAmountSeg(){
+  const was = getRadio('amount');
+  buildSeg('segAmount', 'amount', [...UNITS.map(String), 'other'],
+    o => o === 'other' ? '<b>غير</b>' : amountMode === 'ml' ? `<b>${o * ML_PER_UNIT}</b><small>مل</small>` : `<b>${o}</b>`, 'stack');
+  if (was) setRadio('amount', was);
+  $('amountLabel').textContent = amountMode === 'ml' ? 'الكمية بالمل' : 'الكمية (الرقم على الممية)';
+  const c = $('customAmount');
+  c.placeholder = amountMode === 'ml' ? 'اكتب الكمية بالمل' : 'اكتب الرقم، مثلاً 2.5';
+  c.step = amountMode === 'ml' ? '1' : '0.1';
+  c.inputMode = amountMode === 'ml' ? 'numeric' : 'decimal';
+}
 buildSeg('segDuration', 'dur', [...DURATIONS.map(String), 'other'], o => o === 'other' ? 'غير' : o);
 buildSeg('segSide', 'side', Object.keys(SIDES), o => SIDES[o]);
 buildSeg('segBy', 'by', GIVERS);
+buildAmountSeg();
 
 function setRadio(name, value){
   const el = document.querySelector(`input[name="${name}"][value="${CSS.escape(String(value))}"]`);
@@ -1516,6 +1559,7 @@ function openSheet(feed){
   clearRadios();
   ['customAmountRow','customDurationRow'].forEach(id => $(id).classList.add('hidden'));
   $('customAmount').value = '';
+  delete $('customAmount').dataset.orig;
   $('customDuration').value = '';
   const p = loadPrefs();
   if (feed){
@@ -1535,7 +1579,8 @@ function openSheet(feed){
       else {
         setRadio('amount', 'other');
         $('customAmountRow').classList.remove('hidden');
-        $('customAmount').value = feed.amount_ml;
+        $('customAmount').value = amountVal(Number(feed.amount_ml));
+        $('customAmount').dataset.orig = feed.amount_ml;   // إذا ما تغيّر نخلي المل الأصلي بدون تقريب
       }
     }
     if (feed.given_by) setRadio('by', feed.given_by);
@@ -1587,9 +1632,16 @@ $('sheet').addEventListener('submit', async e => {
   };
   if (type === 'formula'){
     const a = getRadio('amount');
-    const amount = a === 'other' ? parseInt($('customAmount').value, 10) : Number(a) * ML_PER_UNIT;
+    const c = $('customAmount');
+    let amount = Number(a) * ML_PER_UNIT;
+    if (a === 'other'){
+      const v = Number(c.value);
+      amount = c.dataset.orig && String(amountVal(Number(c.dataset.orig))) === c.value
+        ? Number(c.dataset.orig)
+        : Math.round(amountMode === 'ml' ? v : v * ML_PER_UNIT);
+    }
     if (!amount || amount < 1 || amount > 1000){
-      $('formError').textContent = 'اختار الرقم أو اكتب كمية صحيحة بالمل.';
+      $('formError').textContent = amountMode === 'ml' ? 'اكتب كمية صحيحة بالمل.' : 'اختار الرقم أو اكتب رقم صحيح.';
       return;
     }
     Object.assign(feed, { amount_ml:amount, duration_min:null, breast_side:null, given_by:getRadio('by') });
@@ -1813,12 +1865,26 @@ function renderReports(){
 
   const av = averages(7);
   $('feedStats').innerHTML = `
-    <div class="stat"><b>${av.ml}</b><span>مل باليوم</span></div>
+    <div class="stat"><b>${amountVal(av.ml)}</b><span>${amountUnit()} باليوم</span></div>
     <div class="stat"><b>${av.feeds}</b><span>رضعة باليوم</span></div>
     <div class="stat"><b>${av.mins}</b><span>دقيقة طبيعي باليوم</span></div>`;
 }
 
 $('kidCard').addEventListener('click', e => { if (e.target.closest('#editKidBtn')) showSetup('edit'); });
+
+/* ---------------- settings ---------------- */
+buildSeg('segUnitMode', 'unitmode', ['number', 'ml'], o => o === 'ml' ? 'بالمل' : 'بالرقم');
+$('settingsBtn').addEventListener('click', () => {
+  setRadio('unitmode', amountMode);
+  showPanel('settingsSheet');
+});
+$('segUnitMode').addEventListener('change', () => {
+  amountMode = getRadio('unitmode') === 'ml' ? 'ml' : 'number';
+  safeSet('sama_unit', amountMode);
+  buildAmountSeg();
+  render();
+});
+$('settingsSheet').addEventListener('submit', e => e.preventDefault());
 
 /* ---------------- growth sheet ---------------- */
 let editingGrowthId = null;
