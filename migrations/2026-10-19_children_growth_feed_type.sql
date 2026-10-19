@@ -96,4 +96,14 @@ alter table public.feeds
 create index if not exists feeds_child_time_idx on public.feeds (child_id, fed_at desc);
 
 -- ================= التزامن المباشر =================
-alter publication supabase_realtime add table public.children, public.growth;
+-- (بأمان إذا انشغّل الملف أكثر من مرة)
+do $$
+declare t text;
+begin
+  foreach t in array array['children','growth'] loop
+    if not exists (select 1 from pg_publication_tables
+                   where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = t) then
+      execute format('alter publication supabase_realtime add table public.%I', t);
+    end if;
+  end loop;
+end $$;
