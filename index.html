@@ -999,10 +999,12 @@ $('historyList').addEventListener('click', async e => {
     return;
   }
   const id = btn.dataset.id;
+  const removed = feeds.find(f => String(f.id) === String(id));
   try{
     await store.remove(id);
     feeds = feeds.filter(f => String(f.id) !== String(id));
     render();
+    if (removed) showToast(removed, 'deleted');
   }catch(err){
     btn.classList.remove('armed');
     alert('ما انحذفت. تأكد من الإنترنت وجرب مرة ثانية.');
@@ -1124,7 +1126,7 @@ $('sheet').addEventListener('submit', async e => {
       feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
       render();
       closeSheet();
-      showToast(row, true);
+      showToast(row, 'edited');
     } else {
       const row = await store.add(feed);
       safeSet('sama_prefs', JSON.stringify({ amount:String(amount), formula:feed.formula_no, by:feed.given_by }));
@@ -1145,20 +1147,33 @@ $('sheet').addEventListener('submit', async e => {
 });
 
 /* ---------------- toast with undo ---------------- */
-let toastTimer = null, lastAddedId = null;
-function showToast(row, edited){
-  // التراجع بس للرضعة الجديدة؛ التعديل ما بيه تراجع
-  lastAddedId = edited ? null : row.id;
-  $('toastTitle').textContent = edited ? 'انعدلت الرضعة' : 'انسجلت الرضعة';
-  $('toastUndo').classList.toggle('hidden', !!edited);
+let toastTimer = null, lastAddedId = null, lastDeleted = null;
+function showToast(row, kind){
+  // kind: فارغ = رضعة جديدة، 'edited' = تعديل (بدون تراجع)، 'deleted' = حذف (التراجع يرجّعها)
+  const edited = kind === 'edited', deleted = kind === 'deleted';
+  lastAddedId = (edited || deleted) ? null : row.id;
+  lastDeleted = deleted ? row : null;
+  $('toastTitle').textContent = edited ? 'انعدلت الرضعة' : deleted ? 'انحذفت الرضعة' : 'انسجلت الرضعة';
+  $('toastUndo').classList.toggle('hidden', edited);
   $('toastSub').textContent = row.amount_ml + ' مل، حليب رقم ' + (row.formula_no || '-') + '، ' + fmtTime(new Date(row.fed_at));
   $('toast').classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(hideToast, 5000);
 }
-function hideToast(){ $('toast').classList.remove('show'); lastAddedId = null; }
+function hideToast(){ $('toast').classList.remove('show'); lastAddedId = null; lastDeleted = null; }
 $('toastClose').addEventListener('click', hideToast);
 $('toastUndo').addEventListener('click', async () => {
+  if (lastDeleted){
+    const r = lastDeleted;
+    hideToast();
+    try{
+      const row = await store.add({ fed_at:r.fed_at, amount_ml:r.amount_ml, formula_no:r.formula_no, given_by:r.given_by, note:r.note });
+      feeds.push(row);
+      feeds.sort((a,b) => new Date(b.fed_at) - new Date(a.fed_at));
+      render();
+    }catch(e){ alert('ما رجعت الرضعة. سجّلها من جديد.'); }
+    return;
+  }
   if (!lastAddedId) return;
   const id = lastAddedId;
   hideToast();
