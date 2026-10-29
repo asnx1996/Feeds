@@ -18,6 +18,7 @@
   UI elements adapted from Uiverse.io (MIT License):
   star button – MuhammadHasann · segmented radios – 00Kubi · wallet card – byllzz (reshaped as a bag)
   theme switch – Galahhad · back-to-top / delete button – vinodjangid07 · toast – akshat-patel28
+  Time wheel adapted from CodeFronts "full-circle-wheel" (codefronts.com/navigation/css-circular-menus/full-circle-wheel/)
 -->
 <style>
 /* ================= TOKENS ================= */
@@ -577,6 +578,100 @@ select.text-input{appearance:auto}
   background:var(--bg);font-size:16px;
 }
 .text-input:focus{outline:none;border-color:var(--peach-deep)}
+/* stepper for the "غير" amount / minutes: tap −/+ (hold to repeat) or tap the number to type */
+.stepper{
+  direction:ltr;margin-top:10px;display:flex;align-items:center;gap:10px;
+  padding:8px;border-radius:20px;background:var(--seg-bg);
+}
+.step-btn{
+  flex-shrink:0;width:60px;height:60px;border-radius:16px;border:none;
+  background:var(--seg-on);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12);
+  font-size:32px;font-weight:700;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  touch-action:manipulation;-webkit-user-select:none;user-select:none;
+  transition:transform .12s ease,background-color .15s ease;
+}
+.step-btn[data-step="1"]{background:var(--peach);color:var(--on-peach)}
+.step-btn:active{transform:scale(.9)}
+.step-btn:disabled{opacity:.35}
+.step-value{flex:1;min-width:0;display:flex;align-items:baseline;justify-content:center;gap:6px}
+.step-input{
+  width:100%;max-width:4.2ch;min-height:60px;padding:0;border:none;background:transparent;
+  font-family:var(--font-display);font-size:44px;font-weight:800;text-align:center;color:var(--text);
+  -moz-appearance:textfield;appearance:textfield;
+}
+.step-input::-webkit-inner-spin-button,.step-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.step-input:focus{outline:none}
+.step-input::placeholder{color:var(--muted);opacity:.5}
+.step-unit{font-size:16px;font-weight:600;color:var(--muted);direction:rtl}
+.step-value.pop .step-input{animation:stepPop .18s ease}
+
+/* ================= TIME WHEEL (CodeFronts full-circle-wheel) ================= */
+.time-trigger{
+  flex:1;min-width:0;min-height:52px;padding:6px 16px;border-radius:14px;
+  border:1.5px solid var(--line);background:var(--bg);color:var(--text);cursor:pointer;
+  display:flex;align-items:baseline;gap:10px;text-align:start;
+}
+.time-trigger b{font-family:var(--font-display);font-size:24px;font-weight:800}
+.time-trigger small{font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.time-trigger[aria-expanded="true"]{border-color:var(--peach-deep)}
+.dial{margin-top:12px;padding:12px 8px 16px;border-radius:22px;background:var(--seg-bg)}
+.dial-tabs{display:flex;gap:6px;margin-bottom:6px}
+.dial-tabs button{
+  flex:1;min-height:44px;border:none;border-radius:12px;background:transparent;
+  color:var(--muted);font-weight:600;font-size:15px;cursor:pointer;
+  transition:background-color .2s ease,color .2s ease;
+}
+.dial-tabs button[aria-selected="true"]{background:var(--seg-on);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.dial-stage{position:relative;display:grid;place-items:center;padding-top:18px}
+.dial-pointer{
+  position:absolute;top:0;left:50%;translate:-50% 0;z-index:3;
+  border:9px solid transparent;border-top:13px solid var(--peach-deep);
+}
+.dial-machine{
+  --size:min(300px,82vw);--r:calc(var(--size) / 2 - 26px);
+  position:relative;width:var(--size);height:var(--size);display:grid;place-items:center;
+}
+.dial-wheel{
+  position:absolute;inset:0;list-style:none;margin:0;padding:0;border-radius:50%;
+  border:1.5px dashed var(--line);
+  rotate:var(--rot,0deg);transition:rotate .7s cubic-bezier(.3,1,.35,1);
+}
+.dial-wheel li{
+  position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;
+  translate:calc(var(--x) * var(--r)) calc(var(--y) * var(--r));
+}
+.dial-stop{
+  pointer-events:auto;min-width:44px;height:44px;padding:0 8px;border-radius:999px;
+  border:1.5px solid var(--line);background:var(--surface);color:var(--text);
+  font-family:var(--font-display);font-size:18px;font-weight:700;line-height:1;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  rotate:calc(var(--rot,0deg) * -1);
+  transition:rotate .7s cubic-bezier(.3,1,.35,1),background-color .25s,color .25s,border-color .25s,scale .25s;
+}
+.dial-stop small{font-family:var(--font-body,inherit);font-size:11px;font-weight:600;color:var(--muted)}
+.dial-stop.day{height:48px;padding:0 10px;font-size:14px}
+.dial-stop.is-active{background:var(--peach);border-color:var(--peach);color:var(--on-peach);scale:1.15;box-shadow:0 0 22px -4px var(--peach-deep)}
+.dial-stop.is-active small{color:var(--on-peach)}
+@media (hover:hover){ .dial-stop:hover{border-color:var(--peach-deep)} }
+.dial-face{
+  position:relative;z-index:2;width:calc(var(--size) * .56);aspect-ratio:1;border-radius:50%;
+  display:grid;place-content:center;justify-items:center;gap:2px;text-align:center;
+  background:var(--surface);border:1.5px solid var(--line);box-shadow:var(--shadow);
+}
+.dial-face em{font-style:normal;font-size:12px;color:var(--muted)}
+.dial-face strong{font-family:var(--font-display);font-size:34px;font-weight:800;line-height:1.1;direction:ltr}
+.dial-face strong span{opacity:.4;transition:opacity .2s}
+.dial-face strong span.on{opacity:1;color:var(--peach-deep)}
+.dial-steer{display:flex;gap:6px;margin-top:4px;direction:ltr}
+.dial-steer button{
+  min-width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);
+  background:var(--seg-bg);color:var(--text);font-size:20px;font-weight:700;cursor:pointer;
+  touch-action:manipulation;
+}
+.dial-steer .dial-ampm{border-radius:999px;padding:0 10px;font-size:15px;background:var(--peach);border-color:var(--peach);color:var(--on-peach)}
+.dial-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@keyframes stepPop{50%{transform:scale(1.12)}}
 .ghost-btn{
   flex-shrink:0;min-height:48px;padding:0 16px;border-radius:12px;
   border:1.5px solid var(--line);background:transparent;font-weight:600;cursor:pointer;
@@ -918,8 +1013,13 @@ select.text-input{appearance:auto}
   <div class="field" id="amountField">
     <span class="field-label" id="amountLabel">الكمية (الرقم على الممية)</span>
     <div class="seg" id="segAmount"></div>
-    <div class="field-row hidden" id="customAmountRow" style="margin-top:10px">
-      <input class="text-input" type="number" inputmode="numeric" min="1" max="1000" id="customAmount" placeholder="اكتب الكمية بالمل">
+    <div class="stepper hidden" id="customAmountRow">
+      <button class="step-btn" type="button" data-step="-1" aria-label="نقّص">−</button>
+      <div class="step-value">
+        <input class="step-input" type="number" inputmode="numeric" min="1" max="1000" id="customAmount" placeholder="0" aria-label="الكمية">
+        <span class="step-unit" id="customAmountUnit">مل</span>
+      </div>
+      <button class="step-btn" type="button" data-step="1" aria-label="زيّد">+</button>
     </div>
   </div>
 
@@ -927,8 +1027,13 @@ select.text-input{appearance:auto}
     <div class="field">
       <span class="field-label">المدة بالدقايق</span>
       <div class="seg" id="segDuration"></div>
-      <div class="field-row hidden" id="customDurationRow" style="margin-top:10px">
-        <input class="text-input" type="number" inputmode="numeric" min="1" max="300" id="customDuration" placeholder="اكتب المدة بالدقايق">
+      <div class="stepper hidden" id="customDurationRow">
+        <button class="step-btn" type="button" data-step="-1" aria-label="نقّص">−</button>
+        <div class="step-value">
+          <input class="step-input" type="number" inputmode="numeric" min="1" max="300" step="1" id="customDuration" placeholder="0" aria-label="المدة بالدقايق">
+          <span class="step-unit">دقيقة</span>
+        </div>
+        <button class="step-btn" type="button" data-step="1" aria-label="زيّد">+</button>
       </div>
     </div>
     <div class="field">
@@ -943,10 +1048,36 @@ select.text-input{appearance:auto}
   </div>
 
   <div class="field">
-    <label for="feedTime">الوقت</label>
+    <span class="field-label">الوقت</span>
     <div class="field-row">
-      <input class="text-input" type="datetime-local" id="feedTime">
+      <button class="time-trigger" type="button" id="timeTrigger" aria-expanded="false" aria-controls="timeDial">
+        <b id="timeTriggerTime"></b><small id="timeTriggerDay"></small>
+      </button>
       <button class="ghost-btn" type="button" id="nowBtn">هسه</button>
+    </div>
+    <input class="hidden" type="datetime-local" id="feedTime" tabindex="-1" aria-hidden="true">
+    <div class="dial hidden" id="timeDial">
+      <div class="dial-tabs" role="tablist">
+        <button type="button" role="tab" data-mode="hour">الساعة</button>
+        <button type="button" role="tab" data-mode="min">الدقيقة</button>
+        <button type="button" role="tab" data-mode="day">اليوم</button>
+      </div>
+      <div class="dial-stage">
+        <div class="dial-pointer" aria-hidden="true"></div>
+        <div class="dial-machine">
+          <ul class="dial-wheel" id="dialWheel"></ul>
+          <div class="dial-face">
+            <em id="dialHint"></em>
+            <strong id="dialCurrent"></strong>
+            <div class="dial-steer">
+              <button type="button" id="dialMinus" aria-label="نقّص">−</button>
+              <button type="button" id="dialAmPm" class="dial-ampm"></button>
+              <button type="button" id="dialPlus" aria-label="زيّد">+</button>
+            </div>
+          </div>
+          <p class="dial-live" id="dialLive" aria-live="polite"></p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1503,10 +1634,57 @@ function buildAmountSeg(){
   if (was) setRadio('amount', was);
   $('amountLabel').textContent = amountMode === 'ml' ? 'الكمية بالمل' : 'الكمية (الرقم على الممية)';
   const c = $('customAmount');
-  c.placeholder = amountMode === 'ml' ? 'اكتب الكمية بالمل' : 'اكتب الرقم، مثلاً 2.5';
   c.step = amountMode === 'ml' ? '1' : '0.1';
+  c.max = amountMode === 'ml' ? '1000' : String(Math.floor(1000 / ML_PER_UNIT * 10) / 10);
   c.inputMode = amountMode === 'ml' ? 'numeric' : 'decimal';
+  c.dataset.inc = amountMode === 'ml' ? '10' : '0.5';   // كم تزيد/تنقص كل ضغطة
+  $('customAmountUnit').textContent = amountMode === 'ml' ? 'مل' : 'رقم';
 }
+$('customDuration').dataset.inc = '1';
+
+/* ---------------- stepper (−/+) ---------------- */
+function stepperSync(input){
+  const v = Number(input.value);
+  const box = input.closest('.stepper');
+  box.querySelector('[data-step="-1"]').disabled = input.value !== '' && v <= Number(input.min);
+  box.querySelector('[data-step="1"]').disabled = v >= Number(input.max);
+}
+function stepBy(input, dir){
+  const inc = Number(input.dataset.inc) || 1;
+  const min = Number(input.min), max = Number(input.max);
+  const cur = Number(input.value) || 0;
+  // نقفز لأقرب مضاعف للخطوة حتى تبقى الأرقام مرتبة (مثلاً 95 → 100)
+  let next = dir > 0 ? Math.floor(cur / inc + 1e-9) * inc + inc : Math.ceil(cur / inc - 1e-9) * inc - inc;
+  next = Math.round(Math.min(max, Math.max(min, next)) * 10) / 10;
+  if (String(next) === input.value) return false;
+  input.value = String(next);
+  stepperSync(input);
+  const val = input.closest('.step-value') || input.parentElement;
+  val.classList.remove('pop'); void val.offsetWidth; val.classList.add('pop');
+  return true;
+}
+function stepperFill(input, def){
+  if (input.value === '') input.value = String(def);
+  stepperSync(input);
+}
+document.querySelectorAll('.stepper').forEach(box => {
+  const input = box.querySelector('.step-input');
+  input.addEventListener('input', () => stepperSync(input));
+  box.querySelectorAll('.step-btn').forEach(btn => {
+    const dir = Number(btn.dataset.step);
+    let delay = null, repeat = null;
+    const stop = () => { clearTimeout(delay); clearInterval(repeat); delay = repeat = null; };
+    btn.addEventListener('pointerdown', e => {
+      if (e.button) return;
+      e.preventDefault();               // لا يطلع الكيبورد ولا يتحدد النص
+      stop();
+      stepBy(input, dir);
+      delay = setTimeout(() => { repeat = setInterval(() => { if (!stepBy(input, dir)) stop(); }, 90); }, 420);
+    });
+    ['pointerup','pointerleave','pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+    btn.addEventListener('click', e => { if (e.detail === 0) stepBy(input, dir); });   // كيبورد / قارئ شاشة
+  });
+});
 buildSeg('segDuration', 'dur', [...DURATIONS.map(String), 'other'], o => o === 'other' ? 'غير' : o);
 buildSeg('segSide', 'side', Object.keys(SIDES), o => SIDES[o]);
 buildSeg('segBy', 'by', GIVERS);
@@ -1530,12 +1708,12 @@ $('segType').addEventListener('change', updateTypeFields);
 $('segAmount').addEventListener('change', () => {
   const other = getRadio('amount') === 'other';
   $('customAmountRow').classList.toggle('hidden', !other);
-  if (other) $('customAmount').focus();
+  if (other) stepperFill($('customAmount'), amountMode === 'ml' ? 90 : 3);
 });
 $('segDuration').addEventListener('change', () => {
   const other = getRadio('dur') === 'other';
   $('customDurationRow').classList.toggle('hidden', !other);
-  if (other) $('customDuration').focus();
+  if (other) stepperFill($('customDuration'), 15);
 });
 
 /* ---------------- sheets ---------------- */
@@ -1571,6 +1749,7 @@ function openSheet(feed){
         setRadio('dur', 'other');
         $('customDurationRow').classList.remove('hidden');
         $('customDuration').value = feed.duration_min;
+        stepperSync($('customDuration'));
       }
       if (feed.breast_side) setRadio('side', feed.breast_side);
     } else {
@@ -1581,6 +1760,7 @@ function openSheet(feed){
         $('customAmountRow').classList.remove('hidden');
         $('customAmount').value = amountVal(Number(feed.amount_ml));
         $('customAmount').dataset.orig = feed.amount_ml;   // إذا ما تغيّر نخلي المل الأصلي بدون تقريب
+        stepperSync($('customAmount'));
       }
     }
     if (feed.given_by) setRadio('by', feed.given_by);
@@ -1603,6 +1783,8 @@ function openSheet(feed){
   if (!getRadio('side')) setRadio('side', SIDES[p.side] ? p.side : 'both');
   if (!getRadio('by')) setRadio('by', GIVERS.includes(p.by) ? p.by : GIVERS[0]);
   updateTypeFields();
+  dialOpen(false);
+  timeSync();
   $('formError').textContent = '';
   showPanel('sheet');
 }
@@ -1610,7 +1792,129 @@ function openEdit(id){
   const f = feeds.find(x => String(x.id) === String(id));
   if (f) openSheet(f);
 }
-$('nowBtn').addEventListener('click', () => { $('feedTime').value = toLocalInput(new Date()); });
+$('nowBtn').addEventListener('click', () => { $('feedTime').value = toLocalInput(new Date()); timeSync(); });
+
+/* ---------------- time wheel: الساعة → الدقيقة → اليوم ---------------- */
+let tp = new Date();          // الوقت اللي دا نختاره
+let dialMode = 'hour';
+let dialRot = 0;
+let dialNext = null;          // مؤقّت الانتقال للخطوة الجاية
+const DIAL_HINTS = { hour:'اختار الساعة', min:'اختار الدقيقة', day:'اختار اليوم' };
+function dialDays(){
+  // 7 أيام تنتهي باليوم (أو حول تاريخ الرضعة إذا كانت أقدم)
+  const t = startOfToday();
+  const sel = new Date(tp); sel.setHours(0,0,0,0);
+  let end = new Date(t);
+  if ((t - sel) / 864e5 > 6){ end = new Date(sel); end.setDate(sel.getDate() + 3); if (end > t) end = t; }
+  return [...Array(7)].map((_, i) => { const d = new Date(end); d.setDate(end.getDate() - i); return d; });
+}
+function dialItems(){
+  if (dialMode === 'hour') return [...Array(12)].map((_, i) => ({ html:String(i || 12), val:i }));
+  if (dialMode === 'min') return [...Array(12)].map((_, i) => ({ html:p2(i * 5), val:i * 5 }));
+  return dialDays().map(d => {
+    const lbl = dayLabel(d);
+    const top = lbl === 'اليوم' || lbl === 'البارحة' ? lbl : d.toLocaleDateString(LOCALE,{weekday:'long'});
+    return { html:`${esc(top)}<small>${d.getDate()}/${d.getMonth() + 1}</small>`, val:dayKey(d), date:d, cls:'day' };
+  });
+}
+function dialIndex(items){
+  if (dialMode === 'hour') return tp.getHours() % 12;
+  if (dialMode === 'min') return Math.round(tp.getMinutes() / 5) % 12;
+  const i = items.findIndex(x => x.val === dayKey(tp));
+  return i < 0 ? 0 : i;
+}
+function dialExact(items, i){
+  return dialMode !== 'min' || items[i].val === tp.getMinutes();
+}
+function dialRender(){
+  const items = dialItems();
+  const n = items.length, step = 360 / n;
+  const idx = dialIndex(items);
+  // أقصر لفّة للمكان الجديد
+  let delta = (-idx * step) - dialRot;
+  delta = ((delta % 360) + 540) % 360 - 180;
+  dialRot += delta;
+  const wheel = $('dialWheel');
+  wheel.innerHTML = items.map((it, i) => {
+    const a = (step * i - 90) * Math.PI / 180;
+    const on = i === idx && dialExact(items, i);
+    return `<li style="--x:${Math.cos(a).toFixed(4)};--y:${Math.sin(a).toFixed(4)}"><button type="button" class="dial-stop ${it.cls || ''} ${on ? 'is-active' : ''}" data-i="${i}" aria-pressed="${on}">${it.html}</button></li>`;
+  }).join('');
+  wheel.style.setProperty('--rot', dialRot + 'deg');
+  wheel.querySelectorAll('.dial-stop').forEach(b => { b.style.setProperty('--rot', dialRot + 'deg'); });
+  wheel._items = items;
+  document.querySelectorAll('.dial-tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === dialMode)));
+  $('dialHint').textContent = DIAL_HINTS[dialMode];
+  $('dialAmPm').classList.toggle('hidden', dialMode !== 'hour');
+  dialFace();
+}
+function dialFace(){
+  const h = tp.getHours() % 12 || 12;
+  $('dialCurrent').innerHTML = dialMode === 'day'
+    ? `<span class="on" style="font-size:24px">${esc(dayLabel(tp))}</span>`
+    : `<span class="${dialMode === 'hour' ? 'on' : ''}">${h}</span>:<span class="${dialMode === 'min' ? 'on' : ''}">${p2(tp.getMinutes())}</span>`;
+  $('dialAmPm').textContent = tp.getHours() < 12 ? 'الصبح' : 'المسا';
+}
+function timeWrite(){
+  $('feedTime').value = toLocalInput(tp);
+  $('timeTriggerTime').textContent = fmtTime(tp);
+  $('timeTriggerDay').textContent = dayLabel(tp);
+  $('dialLive').textContent = fmtTime(tp) + '، ' + dayLabel(tp);
+}
+function timeSync(){
+  // يقرا القيمة من الحقل (بعد فتح الشيت أو "هسه") ويحدّث العرض
+  tp = $('feedTime').value ? new Date($('feedTime').value) : new Date();
+  timeWrite();
+  if (!$('timeDial').classList.contains('hidden')) dialRender();
+}
+function dialOpen(open){
+  clearTimeout(dialNext);
+  $('timeDial').classList.toggle('hidden', !open);
+  $('timeTrigger').setAttribute('aria-expanded', String(open));
+  if (open){ dialMode = 'hour'; dialRender(); }
+}
+function dialGo(mode){ clearTimeout(dialNext); dialMode = mode; dialRender(); }
+$('timeTrigger').addEventListener('click', () => dialOpen($('timeDial').classList.contains('hidden')));
+document.querySelector('.dial-tabs').addEventListener('click', e => {
+  const b = e.target.closest('button[data-mode]');
+  if (b) dialGo(b.dataset.mode);
+});
+$('dialWheel').addEventListener('click', e => {
+  const b = e.target.closest('.dial-stop');
+  if (!b) return;
+  const it = $('dialWheel')._items[Number(b.dataset.i)];
+  if (dialMode === 'hour') tp.setHours(it.val + (tp.getHours() >= 12 ? 12 : 0));
+  else if (dialMode === 'min') tp.setMinutes(it.val);
+  else tp.setFullYear(it.date.getFullYear(), it.date.getMonth(), it.date.getDate());
+  timeWrite();
+  dialRender();
+  // بعد ما تختار ينتقل وحده للخطوة الجاية، وبعد اليوم يسدّ
+  clearTimeout(dialNext);
+  dialNext = setTimeout(() => {
+    if (dialMode === 'hour') dialGo('min');
+    else if (dialMode === 'min') dialGo('day');
+    else dialOpen(false);
+  }, 550);
+});
+function dialStep(dir){
+  clearTimeout(dialNext);
+  if (dialMode === 'hour') tp.setHours(tp.getHours() + dir);
+  else if (dialMode === 'min') tp.setMinutes(tp.getMinutes() + dir);
+  else {
+    tp.setDate(tp.getDate() + dir);
+    if (tp > new Date()) tp.setDate(tp.getDate() - dir);   // ما نروح للمستقبل
+  }
+  timeWrite();
+  dialRender();
+}
+$('dialMinus').addEventListener('click', () => dialStep(-1));
+$('dialPlus').addEventListener('click', () => dialStep(1));
+$('dialAmPm').addEventListener('click', () => {
+  clearTimeout(dialNext);
+  tp.setHours((tp.getHours() + 12) % 24);
+  timeWrite();
+  dialFace();
+});
 
 $('newFeedBtn').addEventListener('click', () => {
   const b = $('newFeedBtn');

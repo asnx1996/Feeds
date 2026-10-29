@@ -52,6 +52,8 @@ Any schema change goes in a new SQL file / migration — never edit `schema.sql`
 - Sun/moon switch (Galahhad) → theme; forced `direction: ltr`; saved in localStorage `sama_theme`.
 - Back-to-top + delete button (vinodjangid07) → delete is tap-twice ("احذف؟" then delete).
 - Toast (akshat-patel28) → "انسجلت الرضعة" with an Undo (تراجع) button.
+- Time wheel (CodeFronts full-circle-wheel) → feed time. Tap the time button → wheel goes hour → minute (5-min stops, −/+ for 1 min) → day (last 7 days) and closes. The hidden `#feedTime` datetime-local input still holds the value; call `timeSync()` after setting it in code.
+- Custom amount/minutes ("غير") use a −/+ stepper (`.stepper`, hold to repeat); the number can still be typed.
 
 ## Conventions
 - RTL, Arabic UI copy in Iraqi dialect (e.g. هسه، منو، ما كو). Western digits (`ar-IQ-u-nu-latn`).
