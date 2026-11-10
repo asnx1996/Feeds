@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#fbf7f6">
 <title>رضعات سما</title>
 <link rel="manifest" href="./manifest.webmanifest">
@@ -18,7 +18,6 @@
   UI elements adapted from Uiverse.io (MIT License):
   star button – MuhammadHasann · segmented radios – 00Kubi · wallet card – byllzz (reshaped as a bag)
   theme switch – Galahhad · back-to-top / delete button – vinodjangid07 · toast – akshat-patel28
-  Time wheel adapted from CodeFronts "full-circle-wheel" (codefronts.com/navigation/css-circular-menus/full-circle-wheel/)
 -->
 <style>
 /* ================= TOKENS ================= */
@@ -81,14 +80,26 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+/* أبعاد ثابتة على التلفون: بدون تكبير، بدون سحبة بالعرض، بدون مطّة فوق/جوة */
+html{
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%;text-size-adjust:100%;
+  overflow-x:hidden;overscroll-behavior:none;
+  touch-action:pan-x pan-y;
+}
+/* من ينفتح شيت على التلفون، الصفحة اللي وراه ما تتحرك */
+@media (max-width:767px){
+  html.locked,html.locked body{overflow:hidden}
+}
 body{
   background:var(--bg);
   color:var(--text);
   font-family:var(--font-body);
   font-size:16px;
   line-height:1.5;
+  width:100%;
   min-height:100vh;
+  min-height:100dvh;
   -webkit-tap-highlight-color:transparent;
   transition:background .3s ease,color .3s ease;
 }
@@ -545,7 +556,7 @@ select.text-input{appearance:auto}
 
 /* ================= SHEET ================= */
 .backdrop{
-  position:fixed;inset:0;background:rgba(20,12,10,.45);
+  position:fixed;inset:0;background:rgba(20,12,10,.45);touch-action:none;
   z-index:80;opacity:0;pointer-events:none;transition:opacity .25s ease;
 }
 .backdrop.show{opacity:1;pointer-events:auto}
@@ -555,7 +566,7 @@ select.text-input{appearance:auto}
   background:var(--surface);
   border-radius:24px 24px 0 0;
   padding:10px 18px calc(18px + env(safe-area-inset-bottom));
-  max-height:92vh;overflow-y:auto;
+  max-height:92vh;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;
   transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);
   box-shadow:0 -10px 40px rgba(0,0,0,.2);
 }
@@ -606,71 +617,65 @@ select.text-input{appearance:auto}
 .step-unit{font-size:16px;font-weight:600;color:var(--muted);direction:rtl}
 .step-value.pop .step-input{animation:stepPop .18s ease}
 
-/* ================= TIME WHEEL (CodeFronts full-circle-wheel) ================= */
-.time-trigger{
-  flex:1;min-width:0;min-height:52px;padding:6px 16px;border-radius:14px;
-  border:1.5px solid var(--line);background:var(--bg);color:var(--text);cursor:pointer;
-  display:flex;align-items:baseline;gap:10px;text-align:start;
+/* ================= TIME RULER ================= */
+/* مسطرة وقت تنسحب يمين/يسار: الإبرة بالنص هي الوقت المختار، وآخر المسطرة هو "هسه" */
+.tp-label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.tp-label .field-label{margin:0}
+.tp-quick{display:flex;gap:6px}
+/* الزر شكله صغير بس مساحة الضغط 44px (الهوامش السالبة تخلي السطر على طوله) */
+.tp-quick button{
+  min-height:44px;margin:-11px 0;padding:0;border:none;background:none;cursor:pointer;
+  display:flex;align-items:center;touch-action:manipulation;
 }
-.time-trigger b{font-family:var(--font-display);font-size:24px;font-weight:800}
-.time-trigger small{font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.time-trigger[aria-expanded="true"]{border-color:var(--peach-deep)}
-.dial{margin-top:12px;padding:12px 8px 16px;border-radius:22px;background:var(--seg-bg)}
-.dial-tabs{display:flex;gap:6px;margin-bottom:6px}
-.dial-tabs button{
-  flex:1;min-height:44px;border:none;border-radius:12px;background:transparent;
-  color:var(--muted);font-weight:600;font-size:15px;cursor:pointer;
-  transition:background-color .2s ease,color .2s ease;
+.tp-quick button span{
+  padding:3px 14px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:14px;font-weight:600;color:var(--text);transition:transform .12s ease;
 }
-.dial-tabs button[aria-selected="true"]{background:var(--seg-on);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.dial-stage{position:relative;display:grid;place-items:center;padding-top:18px}
-.dial-pointer{
-  position:absolute;top:0;left:50%;translate:-50% 0;z-index:3;
-  border:9px solid transparent;border-top:13px solid var(--peach-deep);
+.tp-quick button.now span{background:var(--peach);border-color:var(--peach);color:var(--on-peach)}
+.tp-quick button:active span{transform:scale(.92)}
+.tpick{direction:ltr;padding:6px 0 4px;border-radius:20px;background:var(--seg-bg);overflow:hidden}
+.tp-head{display:flex;align-items:center;gap:8px;padding:0 8px}
+.tp-read{flex:1;min-width:0;text-align:center;direction:rtl}
+.tp-read b{display:block;font-family:var(--font-display);font-size:28px;font-weight:800;line-height:1.15}
+.tp-read small{
+  display:block;font-size:13px;line-height:1.3;color:var(--muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.dial-machine{
-  --size:min(300px,82vw);--r:calc(var(--size) / 2 - 26px);
-  position:relative;width:var(--size);height:var(--size);display:grid;place-items:center;
+.tp-btn{
+  flex-shrink:0;width:46px;height:46px;border-radius:14px;border:none;
+  background:var(--seg-on);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12);
+  font-size:26px;font-weight:700;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  touch-action:manipulation;-webkit-user-select:none;user-select:none;
+  transition:transform .12s ease;
 }
-.dial-wheel{
-  position:absolute;inset:0;list-style:none;margin:0;padding:0;border-radius:50%;
-  border:1.5px dashed var(--line);
-  rotate:var(--rot,0deg);transition:rotate .7s cubic-bezier(.3,1,.35,1);
+.tp-btn:active{transform:scale(.9)}
+.tp-ruler-wrap{position:relative}
+.tp-ruler{
+  display:flex;height:48px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
+  touch-action:pan-x;overscroll-behavior-x:contain;cursor:grab;
+  -webkit-user-select:none;user-select:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 24%,#000 76%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 24%,#000 76%,transparent);
 }
-.dial-wheel li{
-  position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;
-  translate:calc(var(--x) * var(--r)) calc(var(--y) * var(--r));
+.tp-ruler::-webkit-scrollbar{display:none}
+.tp-ruler:focus-visible{outline-offset:-3px}
+.tp-pad{flex:0 0 50%}
+.tp-track{
+  flex:none;position:relative;height:100%;
+  background:
+    repeating-linear-gradient(90deg,var(--text) 0 2px,transparent 2px 120px) -1px 100%/100% 20px no-repeat,
+    repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 10px) 0 100%/100% 10px no-repeat;
 }
-.dial-stop{
-  pointer-events:auto;min-width:44px;height:44px;padding:0 8px;border-radius:999px;
-  border:1.5px solid var(--line);background:var(--surface);color:var(--text);
-  font-family:var(--font-display);font-size:18px;font-weight:700;line-height:1;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  rotate:calc(var(--rot,0deg) * -1);
-  transition:rotate .7s cubic-bezier(.3,1,.35,1),background-color .25s,color .25s,border-color .25s,scale .25s;
+.tp-track span{
+  position:absolute;top:3px;translate:-50% 0;white-space:nowrap;line-height:1.2;
+  font-size:13px;font-weight:600;color:var(--muted);
 }
-.dial-stop small{font-family:var(--font-body,inherit);font-size:11px;font-weight:600;color:var(--muted)}
-.dial-stop.day{height:48px;padding:0 10px;font-size:14px}
-.dial-stop.is-active{background:var(--peach);border-color:var(--peach);color:var(--on-peach);scale:1.15;box-shadow:0 0 22px -4px var(--peach-deep)}
-.dial-stop.is-active small{color:var(--on-peach)}
-@media (hover:hover){ .dial-stop:hover{border-color:var(--peach-deep)} }
-.dial-face{
-  position:relative;z-index:2;width:calc(var(--size) * .56);aspect-ratio:1;border-radius:50%;
-  display:grid;place-content:center;justify-items:center;gap:2px;text-align:center;
-  background:var(--surface);border:1.5px solid var(--line);box-shadow:var(--shadow);
+.tp-track span.d{color:var(--peach-deep);font-weight:700}
+.tp-needle{
+  position:absolute;left:50%;top:2px;bottom:0;width:4px;translate:-50% 0;border-radius:4px;
+  background:var(--peach-deep);box-shadow:0 0 14px var(--peach-deep);pointer-events:none;
 }
-.dial-face em{font-style:normal;font-size:12px;color:var(--muted)}
-.dial-face strong{font-family:var(--font-display);font-size:34px;font-weight:800;line-height:1.1;direction:ltr}
-.dial-face strong span{opacity:.4;transition:opacity .2s}
-.dial-face strong span.on{opacity:1;color:var(--peach-deep)}
-.dial-steer{display:flex;gap:6px;margin-top:4px;direction:ltr}
-.dial-steer button{
-  min-width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);
-  background:var(--seg-bg);color:var(--text);font-size:20px;font-weight:700;cursor:pointer;
-  touch-action:manipulation;
-}
-.dial-steer .dial-ampm{border-radius:999px;padding:0 10px;font-size:15px;background:var(--peach);border-color:var(--peach);color:var(--on-peach)}
-.dial-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @keyframes stepPop{50%{transform:scale(1.12)}}
 .ghost-btn{
   flex-shrink:0;min-height:48px;padding:0 16px;border-radius:12px;
@@ -714,6 +719,8 @@ select.text-input{appearance:auto}
   display:flex;align-items:center;justify-content:center;color:var(--muted);
 }
 .toast .close svg{width:18px;height:18px}
+.toast.bad .msg-title{color:var(--danger)}
+.toast.bad .icon-wrap,.toast.bad .wave{display:none}
 
 /* ================= LOGIN ================= */
 .login{
@@ -1048,37 +1055,27 @@ select.text-input{appearance:auto}
   </div>
 
   <div class="field">
-    <span class="field-label">الوقت</span>
-    <div class="field-row">
-      <button class="time-trigger" type="button" id="timeTrigger" aria-expanded="false" aria-controls="timeDial">
-        <b id="timeTriggerTime"></b><small id="timeTriggerDay"></small>
-      </button>
-      <button class="ghost-btn" type="button" id="nowBtn">هسه</button>
+    <div class="tp-label">
+      <span class="field-label">الوقت</span>
+      <div class="tp-quick">
+        <button type="button" id="tpDayPrev"><span>يوم قبل</span></button>
+        <button type="button" class="now" id="tpNow"><span>هسه</span></button>
+      </div>
+    </div>
+    <div class="tpick" id="timePick">
+      <div class="tp-head">
+        <button class="tp-btn" type="button" id="tpMinus" aria-label="دقيقة أقل">−</button>
+        <div class="tp-read" aria-live="polite"><b id="tpTime"></b><small id="tpDay"></small></div>
+        <button class="tp-btn" type="button" id="tpPlus" aria-label="دقيقة أكثر">+</button>
+      </div>
+      <div class="tp-ruler-wrap">
+        <div class="tp-ruler" id="tpRuler" tabindex="0" role="slider" aria-label="وقت الرضعة، اسحب يمين أو يسار">
+          <i class="tp-pad"></i><div class="tp-track" id="tpTrack"></div><i class="tp-pad"></i>
+        </div>
+        <span class="tp-needle" aria-hidden="true"></span>
+      </div>
     </div>
     <input class="hidden" type="datetime-local" id="feedTime" tabindex="-1" aria-hidden="true">
-    <div class="dial hidden" id="timeDial">
-      <div class="dial-tabs" role="tablist">
-        <button type="button" role="tab" data-mode="hour">الساعة</button>
-        <button type="button" role="tab" data-mode="min">الدقيقة</button>
-        <button type="button" role="tab" data-mode="day">اليوم</button>
-      </div>
-      <div class="dial-stage">
-        <div class="dial-pointer" aria-hidden="true"></div>
-        <div class="dial-machine">
-          <ul class="dial-wheel" id="dialWheel"></ul>
-          <div class="dial-face">
-            <em id="dialHint"></em>
-            <strong id="dialCurrent"></strong>
-            <div class="dial-steer">
-              <button type="button" id="dialMinus" aria-label="نقّص">−</button>
-              <button type="button" id="dialAmPm" class="dial-ampm"></button>
-              <button type="button" id="dialPlus" aria-label="زيّد">+</button>
-            </div>
-          </div>
-          <p class="dial-live" id="dialLive" aria-live="polite"></p>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="field">
@@ -1602,7 +1599,7 @@ $('historyList').addEventListener('click', async e => {
     if (removed) showToast(removed, 'deleted');
   }catch(err){
     btn.classList.remove('armed');
-    alert('ما انحذفت. تأكد من الإنترنت وجرب مرة ثانية.');
+    showNote('ما انحذفت', 'تأكد من الإنترنت وجرب مرة ثانية.', false, true);
   }
 });
 function entryKeys(box, open){
@@ -1720,9 +1717,11 @@ $('segDuration').addEventListener('change', () => {
 function showPanel(id){
   $('backdrop').classList.add('show');
   $(id).classList.add('show');
+  document.documentElement.classList.add('locked');
 }
 function closeSheet(){
   $('backdrop').classList.remove('show');
+  document.documentElement.classList.remove('locked');
   document.querySelectorAll('.sheet.show').forEach(s => s.classList.remove('show'));
 }
 $('backdrop').addEventListener('click', closeSheet);
@@ -1783,7 +1782,6 @@ function openSheet(feed){
   if (!getRadio('side')) setRadio('side', SIDES[p.side] ? p.side : 'both');
   if (!getRadio('by')) setRadio('by', GIVERS.includes(p.by) ? p.by : GIVERS[0]);
   updateTypeFields();
-  dialOpen(false);
   timeSync();
   $('formError').textContent = '';
   showPanel('sheet');
@@ -1792,129 +1790,115 @@ function openEdit(id){
   const f = feeds.find(x => String(x.id) === String(id));
   if (f) openSheet(f);
 }
-$('nowBtn').addEventListener('click', () => { $('feedTime').value = toLocalInput(new Date()); timeSync(); });
-
-/* ---------------- time wheel: الساعة → الدقيقة → اليوم ---------------- */
-let tp = new Date();          // الوقت اللي دا نختاره
-let dialMode = 'hour';
-let dialRot = 0;
-let dialNext = null;          // مؤقّت الانتقال للخطوة الجاية
-const DIAL_HINTS = { hour:'اختار الساعة', min:'اختار الدقيقة', day:'اختار اليوم' };
-function dialDays(){
-  // 7 أيام تنتهي باليوم (أو حول تاريخ الرضعة إذا كانت أقدم)
-  const t = startOfToday();
-  const sel = new Date(tp); sel.setHours(0,0,0,0);
-  let end = new Date(t);
-  if ((t - sel) / 864e5 > 6){ end = new Date(sel); end.setDate(sel.getDate() + 3); if (end > t) end = t; }
-  return [...Array(7)].map((_, i) => { const d = new Date(end); d.setDate(end.getDate() - i); return d; });
+/* ---------------- time ruler: اسحب المسطرة، −/+ للدقيقة، "هسه" و"يوم قبل" ---------------- */
+const TP_PX = 2;               // بكسل لكل دقيقة (كل 5 دقايق = 10px، مثل خطوط المسطرة بالـ CSS)
+const TP_SNAP = 5;             // السحب يوقف على كل 5 دقايق، و −/+ للدقيقة
+let tp = new Date();           // الوقت المختار
+let tpStart = 0, tpEnd = 0;    // أول وآخر المسطرة (آخرها = هسه، فما نروح للمستقبل)
+let tpAuto = false, tpAutoT = null, tpTarget = -1, tpSnapT = null, tpHeld = false, tpDrag = null;
+const tpRuler = $('tpRuler');
+const tpCalm = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+function tpBuild(){
+  const s = new Date(Math.min(Date.now() - 7 * 864e5, tp.getTime() - 864e5));
+  s.setMinutes(0, 0, 0);
+  tpStart = s.getTime(); tpEnd = Date.now();
+  let html = '';
+  for (const d = new Date(tpStart); d.getTime() <= tpEnd; d.setHours(d.getHours() + 1)){
+    const x = (d.getTime() - tpStart) / 60000 * TP_PX, h = d.getHours();
+    html += h === 0
+      ? `<span class="d" style="left:${x}px">${esc(d.toLocaleDateString(LOCALE,{weekday:'short'}))}</span>`
+      : `<span style="left:${x}px">${h % 12 || 12}</span>`;
+  }
+  const track = $('tpTrack');
+  track.style.width = ((tpEnd - tpStart) / 60000 * TP_PX) + 'px';
+  track.innerHTML = html;
 }
-function dialItems(){
-  if (dialMode === 'hour') return [...Array(12)].map((_, i) => ({ html:String(i || 12), val:i }));
-  if (dialMode === 'min') return [...Array(12)].map((_, i) => ({ html:p2(i * 5), val:i * 5 }));
-  return dialDays().map(d => {
-    const lbl = dayLabel(d);
-    const top = lbl === 'اليوم' || lbl === 'البارحة' ? lbl : d.toLocaleDateString(LOCALE,{weekday:'long'});
-    return { html:`${esc(top)}<small>${d.getDate()}/${d.getMonth() + 1}</small>`, val:dayKey(d), date:d, cls:'day' };
-  });
-}
-function dialIndex(items){
-  if (dialMode === 'hour') return tp.getHours() % 12;
-  if (dialMode === 'min') return Math.round(tp.getMinutes() / 5) % 12;
-  const i = items.findIndex(x => x.val === dayKey(tp));
-  return i < 0 ? 0 : i;
-}
-function dialExact(items, i){
-  return dialMode !== 'min' || items[i].val === tp.getMinutes();
-}
-function dialRender(){
-  const items = dialItems();
-  const n = items.length, step = 360 / n;
-  const idx = dialIndex(items);
-  // أقصر لفّة للمكان الجديد
-  let delta = (-idx * step) - dialRot;
-  delta = ((delta % 360) + 540) % 360 - 180;
-  dialRot += delta;
-  const wheel = $('dialWheel');
-  wheel.innerHTML = items.map((it, i) => {
-    const a = (step * i - 90) * Math.PI / 180;
-    const on = i === idx && dialExact(items, i);
-    return `<li style="--x:${Math.cos(a).toFixed(4)};--y:${Math.sin(a).toFixed(4)}"><button type="button" class="dial-stop ${it.cls || ''} ${on ? 'is-active' : ''}" data-i="${i}" aria-pressed="${on}">${it.html}</button></li>`;
-  }).join('');
-  wheel.style.setProperty('--rot', dialRot + 'deg');
-  wheel.querySelectorAll('.dial-stop').forEach(b => { b.style.setProperty('--rot', dialRot + 'deg'); });
-  wheel._items = items;
-  document.querySelectorAll('.dial-tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === dialMode)));
-  $('dialHint').textContent = DIAL_HINTS[dialMode];
-  $('dialAmPm').classList.toggle('hidden', dialMode !== 'hour');
-  dialFace();
-}
-function dialFace(){
-  const h = tp.getHours() % 12 || 12;
-  $('dialCurrent').innerHTML = dialMode === 'day'
-    ? `<span class="on" style="font-size:24px">${esc(dayLabel(tp))}</span>`
-    : `<span class="${dialMode === 'hour' ? 'on' : ''}">${h}</span>:<span class="${dialMode === 'min' ? 'on' : ''}">${p2(tp.getMinutes())}</span>`;
-  $('dialAmPm').textContent = tp.getHours() < 12 ? 'الصبح' : 'المسا';
+// يحرّك المسطرة لمكان الوقت المختار (بدون ما نحسبها سحبة من المستخدم)
+function tpPlace(smooth){
+  clearTimeout(tpSnapT); clearTimeout(tpAutoT);
+  const max = tpRuler.scrollWidth - tpRuler.clientWidth;
+  tpTarget = Math.max(0, Math.min(max, (tp.getTime() - tpStart) / 60000 * TP_PX));
+  tpAuto = true;                                         // لحد ما توصل المسطرة لمكانها
+  tpAutoT = setTimeout(() => { tpAuto = false; }, 1500);
+  tpRuler.scrollTo({ left:tpTarget, behavior: smooth && !tpCalm() ? 'smooth' : 'auto' });
 }
 function timeWrite(){
   $('feedTime').value = toLocalInput(tp);
-  $('timeTriggerTime').textContent = fmtTime(tp);
-  $('timeTriggerDay').textContent = dayLabel(tp);
-  $('dialLive').textContent = fmtTime(tp) + '، ' + dayLabel(tp);
+  $('tpTime').textContent = fmtTime(tp);
+  const ago = Date.now() - tp.getTime();
+  const txt = dayLabel(tp) + (ago < 12 * 36e5 ? ' · ' + agoText(Math.max(0, ago)) : '');
+  $('tpDay').textContent = txt;
+  tpRuler.setAttribute('aria-valuetext', fmtTime(tp) + '، ' + txt);
 }
+function tpSet(d, smooth){
+  const t = new Date(Math.min(d.getTime(), Date.now()));   // ما نروح للمستقبل
+  t.setSeconds(0, 0);
+  tp = t;
+  timeWrite();
+  if (t.getTime() < tpStart || t.getTime() > tpEnd){ tpBuild(); smooth = false; }
+  tpPlace(smooth);
+}
+const tpShift = (mins, smooth) => tpSet(new Date(tp.getTime() + mins * 60000), smooth);
 function timeSync(){
-  // يقرا القيمة من الحقل (بعد فتح الشيت أو "هسه") ويحدّث العرض
+  // يقرا القيمة من الحقل (بعد فتح الشيت) ويبني المسطرة حولها
   tp = $('feedTime').value ? new Date($('feedTime').value) : new Date();
+  tpBuild();
   timeWrite();
-  if (!$('timeDial').classList.contains('hidden')) dialRender();
+  tpPlace(false);
 }
-function dialOpen(open){
-  clearTimeout(dialNext);
-  $('timeDial').classList.toggle('hidden', !open);
-  $('timeTrigger').setAttribute('aria-expanded', String(open));
-  if (open){ dialMode = 'hour'; dialRender(); }
+function tpSettle(){ if (!tpHeld) tpPlace(true); }
+tpRuler.addEventListener('scroll', () => {
+  const left = tpRuler.scrollLeft;
+  if (Math.abs(left - tpTarget) < 1.5){ tpAuto = false; return; }   // وصلت للمكان اللي حطيناها بيه
+  if (tpAuto) return;
+  const mins = Math.round(left / TP_PX / TP_SNAP) * TP_SNAP;
+  const t = Math.min(tpStart + mins * 60000, Math.floor(Date.now() / 60000) * 60000);
+  if (t !== tp.getTime()){ tp = new Date(t); timeWrite(); }
+  clearTimeout(tpSnapT);
+  if (!tpHeld) tpSnapT = setTimeout(tpSettle, 180);
+}, { passive:true });
+// لمس: نعرف الإصبع بعده على المسطرة حتى ما نعدّلها جوّاه
+tpRuler.addEventListener('touchstart', () => { tpHeld = true; tpAuto = false; clearTimeout(tpSnapT); }, { passive:true });
+['touchend','touchcancel'].forEach(ev => tpRuler.addEventListener(ev, () => {
+  tpHeld = false; clearTimeout(tpSnapT); tpSnapT = setTimeout(tpSettle, 180);
+}, { passive:true }));
+// ماوس (الحاسبة): سحب، أو عجلة الماوس
+tpRuler.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'mouse' || e.button) return;
+  tpHeld = true; tpAuto = false; clearTimeout(tpSnapT);
+  tpDrag = { x:e.clientX, left:tpRuler.scrollLeft };
+  tpRuler.setPointerCapture(e.pointerId);
+});
+tpRuler.addEventListener('pointermove', e => { if (tpDrag) tpRuler.scrollLeft = tpDrag.left - (e.clientX - tpDrag.x); });
+['pointerup','pointercancel'].forEach(ev => tpRuler.addEventListener(ev, () => {
+  if (!tpDrag) return;
+  tpDrag = null; tpHeld = false; clearTimeout(tpSnapT); tpSnapT = setTimeout(tpSettle, 180);
+}));
+tpRuler.addEventListener('wheel', e => {
+  if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+  e.preventDefault(); tpAuto = false; tpRuler.scrollLeft += e.deltaY;
+}, { passive:false });
+tpRuler.addEventListener('keydown', e => {
+  const dir = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : 0;
+  if (dir){ e.preventDefault(); tpShift(dir * TP_SNAP, true); }
+});
+// ضغطة = مرة، ضغطة طويلة = يكرر
+function holdRepeat(btn, fn){
+  let delay = null, repeat = null;
+  const stop = () => { clearTimeout(delay); clearInterval(repeat); delay = repeat = null; };
+  btn.addEventListener('pointerdown', e => {
+    if (e.button) return;
+    e.preventDefault();
+    stop(); fn();
+    delay = setTimeout(() => { repeat = setInterval(fn, 90); }, 420);
+  });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+  btn.addEventListener('click', e => { if (e.detail === 0) fn(); });   // كيبورد / قارئ شاشة
 }
-function dialGo(mode){ clearTimeout(dialNext); dialMode = mode; dialRender(); }
-$('timeTrigger').addEventListener('click', () => dialOpen($('timeDial').classList.contains('hidden')));
-document.querySelector('.dial-tabs').addEventListener('click', e => {
-  const b = e.target.closest('button[data-mode]');
-  if (b) dialGo(b.dataset.mode);
-});
-$('dialWheel').addEventListener('click', e => {
-  const b = e.target.closest('.dial-stop');
-  if (!b) return;
-  const it = $('dialWheel')._items[Number(b.dataset.i)];
-  if (dialMode === 'hour') tp.setHours(it.val + (tp.getHours() >= 12 ? 12 : 0));
-  else if (dialMode === 'min') tp.setMinutes(it.val);
-  else tp.setFullYear(it.date.getFullYear(), it.date.getMonth(), it.date.getDate());
-  timeWrite();
-  dialRender();
-  // بعد ما تختار ينتقل وحده للخطوة الجاية، وبعد اليوم يسدّ
-  clearTimeout(dialNext);
-  dialNext = setTimeout(() => {
-    if (dialMode === 'hour') dialGo('min');
-    else if (dialMode === 'min') dialGo('day');
-    else dialOpen(false);
-  }, 550);
-});
-function dialStep(dir){
-  clearTimeout(dialNext);
-  if (dialMode === 'hour') tp.setHours(tp.getHours() + dir);
-  else if (dialMode === 'min') tp.setMinutes(tp.getMinutes() + dir);
-  else {
-    tp.setDate(tp.getDate() + dir);
-    if (tp > new Date()) tp.setDate(tp.getDate() - dir);   // ما نروح للمستقبل
-  }
-  timeWrite();
-  dialRender();
-}
-$('dialMinus').addEventListener('click', () => dialStep(-1));
-$('dialPlus').addEventListener('click', () => dialStep(1));
-$('dialAmPm').addEventListener('click', () => {
-  clearTimeout(dialNext);
-  tp.setHours((tp.getHours() + 12) % 24);
-  timeWrite();
-  dialFace();
-});
+holdRepeat($('tpMinus'), () => tpShift(-1, false));
+holdRepeat($('tpPlus'), () => tpShift(1, false));
+$('tpDayPrev').addEventListener('click', () => tpShift(-1440, false));
+$('tpNow').addEventListener('click', () => tpSet(new Date(), true));
 
 $('newFeedBtn').addEventListener('click', () => {
   const b = $('newFeedBtn');
@@ -1990,7 +1974,8 @@ $('sheet').addEventListener('submit', async e => {
 
 /* ---------------- toast with undo ---------------- */
 let toastTimer = null, lastAddedId = null, lastDeleted = null;
-function showNote(title, sub, withUndo){
+function showNote(title, sub, withUndo, bad){
+  $('toast').classList.toggle('bad', !!bad);   // bad = رسالة خطأ (بدل alert)
   $('toastTitle').textContent = title;
   $('toastSub').textContent = sub || '';
   $('toastUndo').classList.toggle('hidden', !withUndo);
@@ -2022,7 +2007,7 @@ $('toastUndo').addEventListener('click', async () => {
         given_by:r.given_by, note:r.note
       });
       if (row.child_id === currentId){ feeds.push(row); sortFeeds(feeds); render(); }
-    }catch(e){ alert('ما رجعت الرضعة. سجّلها من جديد.'); }
+    }catch(e){ showNote('ما رجعت الرضعة', 'سجّلها من جديد.', false, true); }
     return;
   }
   if (!lastAddedId) return;
@@ -2032,7 +2017,7 @@ $('toastUndo').addEventListener('click', async () => {
     await store.feeds.remove(id);
     feeds = feeds.filter(f => String(f.id) !== String(id));
     render();
-  }catch(e){ alert('ما انلغت. احذفها من السجل.'); }
+  }catch(e){ showNote('ما انلغت', 'احذفها من السجل.', false, true); }
 });
 
 /* ---------------- reports ---------------- */
@@ -2106,7 +2091,10 @@ function dailyTotals(days){
   return out.map(g => ({ date:g.date, ...sumFeeds(g.items) }));
 }
 function averages(days){
-  const rows = dailyTotals(days), n = rows.length || 1;
+  const rows = dailyTotals(days);
+  // نقسم على كل الأيام من أول يوم بيه رضعة لحد اليوم (حتى الأيام الفارغة تنحسب)، مو بس الأيام اللي بيها رضعات
+  const first = rows.reduce((m, r) => r.date < m ? r.date : m, new Date());
+  const n = Math.min(days, Math.max(1, daysBetween(first, new Date()) + 1));
   const t = rows.reduce((s,r) => ({ n:s.n+r.n, ml:s.ml+r.ml, mins:s.mins+r.mins }), { n:0, ml:0, mins:0 });
   return { rows, ml:Math.round(t.ml/n), feeds:(t.n/n).toFixed(1).replace(/\.0$/,''), mins:Math.round(t.mins/n) };
 }
@@ -2221,7 +2209,7 @@ $('growthList').addEventListener('click', async e => {
     showNote('انحذف القياس');
   }catch(err){
     btn.classList.remove('armed');
-    alert('ما انحذف. تأكد من الإنترنت وجرب مرة ثانية.');
+    showNote('ما انحذف', 'تأكد من الإنترنت وجرب مرة ثانية.', false, true);
   }
 });
 entryKeys($('growthList'), id => openGrowth(growth.find(r => String(r.id) === id)));
@@ -2542,12 +2530,20 @@ $('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
   $('loginError').textContent = '';
   $('loginBtn').disabled = true;
-  const { error } = await sb.auth.signInWithPassword({
-    email: $('loginEmail').value.trim(),
-    password: $('loginPass').value
-  });
+  let error = null;
+  try{
+    ({ error } = await sb.auth.signInWithPassword({
+      email: $('loginEmail').value.trim(),
+      password: $('loginPass').value
+    }));
+  }catch(err){ error = err || {}; }
   $('loginBtn').disabled = false;
-  if (error){ $('loginError').textContent = 'الإيميل أو الرمز غلط.'; return; }
+  if (error){
+    // فشل الشبكة (status فارغ/0) أو عطل بالسيرفر مو معناه الرمز غلط
+    const net = !navigator.onLine || error.name === 'AuthRetryableFetchError' || !error.status || error.status >= 500;
+    $('loginError').textContent = net ? 'ما كدرت أتصل. تأكد من الإنترنت وجرب مرة ثانية.' : 'الإيميل أو الرمز غلط.';
+    return;
+  }
   subscribe(); start();
 });
 $('logoutBtn').addEventListener('click', async () => {

@@ -52,7 +52,7 @@ Any schema change goes in a new SQL file / migration — never edit `schema.sql`
 - Sun/moon switch (Galahhad) → theme; forced `direction: ltr`; saved in localStorage `sama_theme`.
 - Back-to-top + delete button (vinodjangid07) → delete is tap-twice ("احذف؟" then delete).
 - Toast (akshat-patel28) → "انسجلت الرضعة" with an Undo (تراجع) button.
-- Time wheel (CodeFronts full-circle-wheel) → feed time. Tap the time button → wheel goes hour → minute (5-min stops, −/+ for 1 min) → day (last 7 days) and closes. The hidden `#feedTime` datetime-local input still holds the value; call `timeSync()` after setting it in code.
+- Time ruler (own code, `.tpick`) → feed time, always visible in the sheet. Drag the ruler sideways (native horizontal scroll, 2px per minute, stops every 5 min, needle in the middle = chosen time, the ruler ends at "now" so the future can't be picked); −/+ = 1 minute (hold to repeat); "هسه" and "يوم قبل" pills next to the label. The hidden `#feedTime` datetime-local input still holds the value; call `timeSync()` after setting it in code. Keep the picker compact: the save button must stay visible without scrolling on a 375×812 phone.
 - Custom amount/minutes ("غير") use a −/+ stepper (`.stepper`, hold to repeat); the number can still be typed.
 
 ## Conventions
@@ -60,6 +60,7 @@ Any schema change goes in a new SQL file / migration — never edit `schema.sql`
 - Colors only via CSS variables in `:root` and `:root[data-theme="dark"]`.
 - No hover-only interactions; hover effects go inside `@media (hover:hover)`.
 - Tap targets ≥ 44px. Respect `prefers-reduced-motion`.
+- Fixed phone viewport: no zoom (viewport meta + `touch-action:pan-x pan-y` on `html`), no sideways scroll, no overscroll bounce; the page behind an open sheet is locked on phones (`html.locked`). Keep inputs at ≥16px font so iOS doesn't zoom on focus.
 - Wrap all localStorage access in try/catch (`safeGet` / `safeSet`).
 - Escape user text with `esc()` before putting it in HTML.
 - Make targeted changes only — don't rewrite or remove working logic outside the requested fix.
